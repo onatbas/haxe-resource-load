@@ -55,7 +55,7 @@ Here is some loaders:
 *ExternalByteArrayLoader
 *ExternalSoundLoader
 *ExternalTextLoader
-*ExternalTextureAtlasLoader // requires Tilesheet library, remove it if you dont want it.
+*ExternalTextureAtlasLoader // requires TileLayer library (as well as AkaTileLayerWrapper: https://github.com/onatbas/AkaTileLayerWrapper), remove it if you dont want it.
 
 Loaders are good for managing local assets, they can download data from web (since most of them use URLLoader)
 If you need to download and save external assets from web, you should use SaveLoader classes, which are:
