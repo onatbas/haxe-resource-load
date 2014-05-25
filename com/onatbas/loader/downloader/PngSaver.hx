@@ -75,8 +75,6 @@ class PngSaver implements IFileSaver<BitmapData>
             current += "/";
         }
 */
-
-        trace (getCompletePath());
         return FileSystem.exists(getCompletePath());
 
         #end
@@ -94,7 +92,6 @@ class PngSaver implements IFileSaver<BitmapData>
         return false;
         #else
 
-        trace ("Save e geldi");
         try
         {
             SaveUtil.savePNG(bmpData, getCompletePath());
