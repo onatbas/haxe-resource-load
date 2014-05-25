@@ -90,9 +90,9 @@ Once you create loaders, you should add them to your ExternalAssetLoader.
 
 ```
         loader.addLoader(new ExternalTextLoader("id", "textUrl"));
-        loader.addLoader(new ExternalBitmapLoader("id", "bitmapUrl"));
-        loader.addLoader(new ExternalByteArrayLoader("id", "url"));
-        loader.addLoader(new ExternalSoundLoader("id", "url"));
+        loader.addLoader(new ExternalBitmapLoader("id2", "bitmapUrl"));
+        loader.addLoader(new ExternalByteArrayLoader("id3", "url"));
+        loader.addLoader(new ExternalSoundLoader("id4", "url"));
 ```
 
 You can also group your assets with ExternalAssetGroup. Which is good for loading/unloading multiple entries with one load/unload call.Here's an example.
