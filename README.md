@@ -1,6 +1,29 @@
+Changes, 25.05.2014:
+=====
+I've made some maintenance on the code after Ludum Dare. Also thanks to everyone who sent their feedback, for issues i did not discover. There's a couple of changes since the last time.
+
+1. In the last commit I forgot to add SaveUtil class for which saving png was not usable. For i have tested loaders and savers double times in a clean project. Sorry for the delay, I am using the library in a working project, because of that i can't see missing dependencies so easily. But this time it is good to go.
+2. I ripped off the tilesheet support from the base. I saw that it is extra work for people who doesn't use tilesheet at all. So now on, the library is ready-to-use for everyone, with no extra work. IF you want the tilesheet supported version, I seperated that to another brach called tilesheet. I will also be lookin at that. (I use it too!)
+3. ExternalAssetParty is no more. It created a lot of confusion between itself and ExternalAssetGroup. AssetParty provided easier syntax for AssetGroup usage, but i think using ExternalAssetGroup shouldn't be harder.
+```
+//intead of this
+var party = new ExternalAssetParty("id", 1);
+party.addText("myText", "path-to-text-here");
+loader.addLoader(party);
+loader.loadList(["id"]);
+
+//now this
+var group = new ExternalAssetGroup<Dynamic>("id", 1);
+group.manager.addLoader(new ExternalTextLoader("myText", "path-to-text-here"));
+loader.addLoader(group);
+loader.loadList(["id"]);
+
+```
+Actually I find this much more explanatory, not a huge difference.
+
+
 AkaLoader - External Asset Loading Library for OpenFL
 =========
-
 
 This library contains some useful classes for handling external assets.
 
@@ -14,14 +37,12 @@ What this library is designed for:
 * Cross-Platform asset management system with very simple load/unload calls.
 * Simplified, id based, delivering of assets.
 
-
-I did not test on all platforms, but last time i checked, iOS, Android, HTML5, Mac, Windows builds are good to go.
-NOTE: This is an old library, i don't quite recall what is implemented and what is not, but if you open issues, i will gladly check and try fixing it-implementing it. But you are free to fork this (please do!)
+I did not test on all platforms, but last time i checked, iOS, Android, HTML5, Mac, Windows builds are good to go. (some targets cannot use Saving features because of lacking filesystem support though)
 
 The way this library is intented to be used:
 =========
 
-You should have a ExternalAssetLoader instance 
+You should have a ExternalAssetLoader object instance
 
 ```
  /**
@@ -55,90 +76,42 @@ Here is some loaders:
 *ExternalByteArrayLoader
 *ExternalSoundLoader
 *ExternalTextLoader
-*ExternalTextureAtlasLoader // requires TileLayer library (as well as AkaTileLayerWrapper: https://github.com/onatbas/AkaTileLayerWrapper), remove it if you dont want it.
 
 Loaders are good for managing local assets, they can download data from web (since most of them use URLLoader)
 If you need to download and save external assets from web, you should use SaveLoader classes, which are:
-*AtlasSaveLoader
 *ByteArraySaveLoader
 *PngSaveLoader
 *SoundSaveLoader
 *TextSaveLoader
 
-once you call load() method. SaveLoaders will download, and save the asset (in a fitting type) to local storage. The name for the saved file depends on the URL to load (ome md5'ing involved). So if you create same SaveLoader with same constructor parameter, next time you request load, if there is such file in local storage, it wont download from web but act like an ExternalLoader class.
+once you call loadList() method. SaveLoaders will download, and save the asset (in a fitting type) to local storage. The name for the saved file depends on the URL to load (ome md5'ing involved). So if you create same SaveLoader with same constructor parameter, next time you request load, if there is such file in local storage, it wont download from web but act like an ExternalLoader class.
 
-
-Once you create loaders, you should add them to your ExternalAssetLoader, for example, here is my code for adding atlas loaders. Just be sure that everything has a unique id! 
-
-
+Once you create loaders, you should add them to your ExternalAssetLoader.
 
 ```
-  /**
-    * Define an external atlas
-    * */
-    public function defineAtlas(id:String, bitmapUrl:String, xmlUrl:String):Void
-    {
-        var atlasLoader:ExternalTextureAtlasLoader = new ExternalTextureAtlasLoader(id, xmlUrl, bitmapUrl);
-        loader.addLoader(atlasLoader);
-    }
-
-    /**
-    * Define an external text.
-    * */
-    public function defineText(id:String, textUrl:String):Void
-    {
-        var atlasLoader:ExternalTextLoader = new ExternalTextLoader(id, textUrl);
-        loader.addLoader(atlasLoader);
-    }
-
-   /**
-    * Define an external bitmap.
-    *
-    * @id : Bitmap id that'll be used for requests.
-    * @bitmapUrl : Url or Path to Bitmap.
-    * */
-    public function defineBitmap(id:String, bitmapUrl:String):Void
-    {
-        var atlasLoader:ExternalBitmapLoader = new ExternalBitmapLoader(id, bitmapUrl);
-        loader.addLoader(atlasLoader);
-    }
-
-    /**
-    * Define a ByteArray Loader
-    *
-    * @id : id that'll be used for requests
-    * @bitmapUrl : Url or Path to ByteArray
-    * */
-    public function defineByteArray(id:String, url:String):Void
-    {
-        var atlasLoader:ExternalByteArrayLoader = new ExternalByteArrayLoader(id, url);
-        loader.addLoader(atlasLoader);
-    }
-
-    /**
-    * Define an OGG formatted sound loader
-    *
-    * @id : Id for sound.
-    * @url : Url or Path to *.ogg
-    * */
-    public function defineSound(id:String, url:String):Void
-    {
-        var sound:ExternalSoundLoader = new ExternalSoundLoader(id, url);
-        loader.addLoader(sound);
-    }
+        loader.addLoader(new ExternalTextLoader("id", "textUrl"));
+        loader.addLoader(new ExternalBitmapLoader("id", "bitmapUrl"));
+        loader.addLoader(new ExternalByteArrayLoader("id", "url"));
+        loader.addLoader(new ExternalSoundLoader("id", "url"));
 ```
 
-You can also group your assets with ExternalAssetParty. Which is good for loading/unloading multiple entries with one load/unload call.Here's an example.
+You can also group your assets with ExternalAssetGroup. Which is good for loading/unloading multiple entries with one load/unload call.Here's an example.
 ```
-  var party:ExternalAssetParty;
 
-        // Initializing json party.
-        party = new ExternalAssetParty("jsonParty", 2);
-        party.addText("otherAssets", "your path to json here");
-        party.addText("playerData", "your path to player json here");
-        party.addText("saveData", "your path to save data here");
+        // Initializing text-based party.
+        var group:ExternalAssetGroup<String>;
+        group = new ExternalAssetGroup<String>("jsonParty", 2);
+        group.manager.addLoader(new TextSaveLoader("mytext", "/Users/onatbas/Desktop/SaveIntoThisFile", "/Users/onatbas/Desktop/new.json"));
+        group.manager.addLoader(new TextSaveLoader("mytext1", "/Users/onatbas/Desktop/SaveIntoThisFile", "/Users/onatbas/Desktop/new1.json"));
+        group.manager.addLoader(new TextSaveLoader("mytext2", "/Users/onatbas/Desktop/SaveIntoThisFile", "/Users/onatbas/Desktop/new2.json"));
+        loader.addLoader(group);
 
-  loader.addLoader(party);
+        // Initializing text-based party.
+        var dynGroup = new ExternalAssetGroup<Dynamic>("assets", 2);
+        dynGroup.manager.addLoader(new PngSaveLoader("mysheet", "/Users/onatbas/Desktop/SaveIntoThisFile", "/Users/onatbas/Desktop/sheet.png"));
+        dynGroup.manager.addLoader(new PngSaveLoader("mysheet1", "/Users/onatbas/Desktop/SaveIntoThisFile", "/Users/onatbas/Desktop/sheet1.png"));
+        dynGroup.manager.addLoader(new SoundSaveLoader("mySound", "/Users/onatbas/Desktop/SaveIntoThisFile", "/Users/onatbas/Desktop/sound.ogg"));
+        loader.addLoader(dynGroup);
 ```
 
 
@@ -222,15 +195,14 @@ Quick note : on iOS, there's a strange behaviour of openFL. OpenFL places your c
 Usage Tips
 =========
 
-I suggest having a json file with a fixed path, formatted like this : https://gist.github.com/onatbas/10468471 , and first load that file, and define loaders according to that json file. 
-
+I suggest having a json file with a fixed path, formatted like this : https://gist.github.com/onatbas/10468471 , and first load that file, and define loaders according to that json file.
 Since you can change the content of this json file, you can change, remove, add asset entries into it, or at least this is how i used it.
 
 
 A Little Explanation
 =========
 
-* Like i said, the code is old, i don't if it is still working right now. But i will be looking at issues and pull requests. 
+* the code is old, i don't if it is still working right now. But i will be looking at issues and pull requests.
 * While downloading content, loader doesn't inform you about what it is doing. a SaveLoader will download an asset if it cant find it, but will not dispatch an event to inform, you have to check for that, or you can extend this library to dispatch these events, it should be easy to add something like that to ExternalAssetLoaderEvent. i just didn't have time for it and didnt need to use download feature so stopped working on it.
 * The library doesnt check for permanent assets. If you want an asset to be permanent, you should not call unloadList() with a list with that id :) you have to check for that as well.
 * I might be lazy sometimes, so if you think there's a fix you can handle, please fork! i'll be glad to see all these forks :)
