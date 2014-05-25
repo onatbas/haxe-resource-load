@@ -8,7 +8,7 @@ import com.onatbas.loader.ExternalDeliverable;
 
 class ExternalAssetGroup<T> implements IExternalLoader<T>
 {
-    private var manager:BaseLoaderManager<T>;
+    public var manager:BaseLoaderManager<T>;
     private var dispatcher:EventDispatcher;
     public var id(default, null):String;
     public var ready(default, null):Bool;

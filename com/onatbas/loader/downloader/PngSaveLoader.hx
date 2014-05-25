@@ -44,9 +44,7 @@ class PngSaveLoader implements IExternalLoader<BitmapData>
 
     public function start():Void
     {
-        trace ("start geldi");
         bmpLoader.start();
-        trace ("Start çıktı");
     }
 
 
@@ -80,7 +78,6 @@ class PngSaveLoader implements IExternalLoader<BitmapData>
         }
         else
         {
-            trace (url);
             bmpLoader = new ExternalBitmapLoader(id, url);
             saveAfterLoadRequired = true;
         }
@@ -94,14 +91,11 @@ class PngSaveLoader implements IExternalLoader<BitmapData>
     {
         ready = true;
 
-
-        trace ("Dispatching complete");
         dispatcher.dispatchEvent(new LoaderEvent(LoaderEvent.COMPLETE, this));
     }
 
     public function prepare():Void
     {
-        trace ("prepare'e geldi");
         bmpLoader.prepare();
 
         if (saveAfterLoadRequired)

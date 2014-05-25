@@ -95,13 +95,11 @@ class ExternalBitmapLoader implements IExternalLoader<BitmapData>
     public function handleComplete(e:Event):Void
     {
 
-        trace ("Loader complete");
         eventDispatcher.dispatchEvent(new LoaderEvent(LoaderEvent.COMPLETE, this));
     }
 
     public function disposeAll():Void
     {
-        trace ("Disposing meee,", id);
     ready = false;
         if (_bitmapData != null)
         _bitmapData.dispose();

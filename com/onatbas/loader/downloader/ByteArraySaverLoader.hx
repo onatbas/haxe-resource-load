@@ -2,12 +2,11 @@ package com.onatbas.loader.downloader;
 
 import com.onatbas.loader.loaders.ExternalByteArrayLoader;
 import com.onatbas.loader.event.LoaderEvent;
-import com.onatbas.loader.downloader.BytearraySaver;
-import com.onatbas.loader.loaders.ByteArrayLoader;
+import com.onatbas.loader.downloader.ByteArraySaver;
 import flash.events.EventDispatcher;
 import flash.utils.ByteArray;
 import com.onatbas.loader.loaders.IExternalLoader;
-class ByteArraySaveLoader implements IExternalLoader<ByteArray>
+class ByteArraySaverLoader implements IExternalLoader<ByteArray>
 {
 
     public var id(default, null):String;
@@ -60,7 +59,7 @@ class ByteArraySaveLoader implements IExternalLoader<ByteArray>
 
         dispatcher = new EventDispatcher();
 
-        saver = new BytearraySaver();
+        saver = new ByteArraySaver();
         saver.setPath(path);
         saver.setUrl(url);
 
