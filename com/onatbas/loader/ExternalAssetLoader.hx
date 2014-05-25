@@ -1,7 +1,6 @@
 package com.onatbas.loader;
 
 import flash.utils.ByteArray;
-import aze.display.TilesheetEx;
 import com.onatbas.loader.loaders.IExternalLoader;
 import flash.events.EventDispatcher;
 import flash.events.Event;
@@ -9,7 +8,6 @@ import com.onatbas.loader.LoadingStatusType;
 
 import flash.display.Bitmap;
 import flash.display.BitmapData;
-import aze.display.SparrowTilesheet;
 
 import com.onatbas.loader.ExternalDeliverableType;
 
@@ -34,15 +32,6 @@ class ExternalAssetLoader extends BaseLoaderManager<Dynamic>
         var deliverable:ExternalDeliverable<String> = new ExternalDeliverable<String>();
         deliverable.id = id;
         deliverable.type = TEXT;
-        findAgent(deliverable).deliver(deliverable);
-        return deliverable.data;
-    }
-
-    public function getTileSheet(id:String):TilesheetEx
-    {
-        var deliverable:ExternalDeliverable<TilesheetEx> = new ExternalDeliverable<TilesheetEx>();
-        deliverable.id = id;
-        deliverable.type = ATLAS;
         findAgent(deliverable).deliver(deliverable);
         return deliverable.data;
     }
