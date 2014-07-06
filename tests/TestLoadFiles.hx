@@ -1,6 +1,6 @@
 package ;
 import async.tests.AsyncTestCase;
-import com.onatbas.loader.ExternalAssetLoader;
+import com.onatbas.loader.AkaLoader;
 import com.onatbas.loader.ExternalAssetLoaderEvent;
 import haxe.unit.TestCase;
 
@@ -9,11 +9,11 @@ import haxe.unit.TestCase;
  */
 class TestLoadFiles extends AsyncTestCase
 {	 
-	private var loader:ExternalAssetLoader;
+	private var loader:AkaLoader;
 	
     public function new() {
         super();
-		loader = new ExternalAssetLoader(3);
+		loader = new AkaLoader(3);
 		loader.getData(
         loader.addEventListener(ExternalAssetLoaderEvent.LIST_LOAD_COMPLETE, handleLoadComplete);
     }

@@ -1,6 +1,6 @@
 package com.onatbas.loader.downloader;
 
-import com.onatbas.loader.loaders.ExternalByteArrayLoader;
+import com.onatbas.loader.loaders.ByteArrayLoader;
 import com.onatbas.loader.event.LoaderEvent;
 import com.onatbas.loader.downloader.ByteArraySaver;
 import flash.events.EventDispatcher;
@@ -15,7 +15,7 @@ class ByteArraySaverLoader implements IExternalLoader<ByteArray>
     private var saveAfterLoadRequired:Bool = false;
     private var dispatcher:EventDispatcher;
 
-    private var loader:ExternalByteArrayLoader;
+    private var loader:ByteArrayLoader;
     private var saver:ByteArraySaver;
 
     private var state:String;
@@ -66,12 +66,12 @@ class ByteArraySaverLoader implements IExternalLoader<ByteArray>
 
         if (saver.isSaved())
         {
-            loader = new ExternalByteArrayLoader(id, saver.getCompletePath());
+            loader = new ByteArrayLoader(id, saver.getCompletePath());
             saveAfterLoadRequired = false;
         }
         else
         {
-            loader = new ExternalByteArrayLoader(id, url);
+            loader = new ByteArrayLoader(id, url);
             saveAfterLoadRequired = true;
         }
 

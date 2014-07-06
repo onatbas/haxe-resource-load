@@ -6,7 +6,7 @@ package com.onatbas.loader.downloader;
  * */
 
 import com.onatbas.loader.event.LoaderEvent;
-import com.onatbas.loader.loaders.ExternalBitmapLoader;
+import com.onatbas.loader.loaders.BitmapLoader;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.display.BitmapData;
@@ -17,7 +17,7 @@ class PngSaveLoader implements IExternalLoader<BitmapData>
     private var saveAfterLoadRequired:Bool = false;
 
     private var dispatcher:EventDispatcher;
-    private var bmpLoader:ExternalBitmapLoader;
+    private var bmpLoader:BitmapLoader;
     private var pngSaver:PngSaver;
 
     private var state:String;
@@ -73,12 +73,12 @@ class PngSaveLoader implements IExternalLoader<BitmapData>
 
         if (pngSaver.isSaved())
         {
-            bmpLoader = new ExternalBitmapLoader(id, pngSaver.getCompletePath());
+            bmpLoader = new BitmapLoader(id, pngSaver.getCompletePath());
             saveAfterLoadRequired = false;
         }
         else
         {
-            bmpLoader = new ExternalBitmapLoader(id, url);
+            bmpLoader = new BitmapLoader(id, url);
             saveAfterLoadRequired = true;
         }
 

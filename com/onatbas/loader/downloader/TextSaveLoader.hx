@@ -7,7 +7,7 @@ package com.onatbas.loader.downloader;
 
 import com.onatbas.loader.event.LoaderEvent;
 import flash.events.Event;
-import com.onatbas.loader.loaders.ExternalTextLoader;
+import com.onatbas.loader.loaders.TextLoader;
 import flash.events.EventDispatcher;
 import com.onatbas.loader.loaders.IExternalLoader;
 class TextSaveLoader implements IExternalLoader<String>
@@ -15,7 +15,7 @@ class TextSaveLoader implements IExternalLoader<String>
     private var saveAfterLoadRequired:Bool = false;
 
     private var dispatcher:EventDispatcher;
-    private var textLoader:ExternalTextLoader;
+    private var textLoader:TextLoader;
     private var textSaver:TextSaver;
 
     private var state:String;
@@ -66,12 +66,12 @@ class TextSaveLoader implements IExternalLoader<String>
 
     if (textSaver.isSaved())
         {
-            textLoader = new ExternalTextLoader(id, textSaver.getCompletePath());
+            textLoader = new TextLoader(id, textSaver.getCompletePath());
             saveAfterLoadRequired = false;
         }
         else
         {
-            textLoader = new ExternalTextLoader(id, url);
+            textLoader = new TextLoader(id, url);
             saveAfterLoadRequired = true;
         }
 

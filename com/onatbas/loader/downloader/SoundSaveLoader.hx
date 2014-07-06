@@ -7,7 +7,7 @@ package com.onatbas.loader.downloader;
 
 import flash.utils.ByteArray;
 import com.onatbas.loader.event.LoaderEvent;
-import com.onatbas.loader.loaders.ExternalSoundLoader;
+import com.onatbas.loader.loaders.SoundLoader;
 import com.onatbas.loader.loaders.IExternalLoader;
 import flash.events.EventDispatcher;
 import flash.media.Sound;
@@ -20,7 +20,7 @@ class SoundSaveLoader implements IExternalLoader<Sound>
     private var saveAfterLoadRequired:Bool = false;
     private var dispatcher:EventDispatcher;
 
-    private var loader:ExternalSoundLoader;
+    private var loader:SoundLoader;
     private var saver:ByteArraySaver;
 
     private var state:String;
@@ -67,12 +67,12 @@ class SoundSaveLoader implements IExternalLoader<Sound>
 
         if (saver.isSaved())
         {
-            loader = new ExternalSoundLoader(id, saver.getCompletePath());
+            loader = new SoundLoader(id, saver.getCompletePath());
             saveAfterLoadRequired = false;
         }
         else
         {
-            loader = new ExternalSoundLoader(id, url);
+            loader = new SoundLoader(id, url);
             saveAfterLoadRequired = true;
         }
 
