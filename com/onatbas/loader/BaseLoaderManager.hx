@@ -1,17 +1,19 @@
 package com.onatbas.loader;
 
 import com.onatbas.loader.event.LoaderEvent;
+import com.onatbas.loader.loaders.BaseExternalLoader;
 import flash.events.EventDispatcher;
 import com.onatbas.loader.loaders.IExternalLoader;
 import flash.events.Event;
 import com.onatbas.loader.ExternalDeliverableType;
 import com.onatbas.loader.LoadingStatusType;
+import haxe.CallStack;
 
 private typedef LoadStatusMap = Map<String, LoadingStatusType>;
 
 class BaseLoaderManager<T> extends EventDispatcher
 {
-    public var loaders(default, null):Map<String, IExternalLoader<T>>;
+    public var loaders(default, null):Map<String, BaseExternalLoader>;
     private var loadQueue:LoadStatusMap;
 
     public var maxConnectionLimit(default, null):Int;
@@ -20,11 +22,10 @@ class BaseLoaderManager<T> extends EventDispatcher
     {
         this.maxConnectionLimit = maxConnectionLimit;
         super();
-        loaders = new Map<String, IExternalLoader<T>>();
-
+        loaders = new Map<String, BaseExternalLoader>();
     }
 
-    public function addLoader(loader:IExternalLoader<T>):Void
+    public function addLoader(loader:BaseExternalLoader):Void
     {
         var id:String = loader.id;
         if (loaders[id] != null)
@@ -35,7 +36,7 @@ class BaseLoaderManager<T> extends EventDispatcher
 
         loaders[id] = loader;
     }
-
+	
     public function loadList(list:Array<String>):Void
     {
         loadQueue = new Map<String, LoadingStatusType>();
@@ -93,7 +94,6 @@ class BaseLoaderManager<T> extends EventDispatcher
                 loadQueue[id] = ACTIVE;
                 loaders[id].start();
             }
-
         }
 
         if (isAllComplete)
@@ -109,7 +109,6 @@ class BaseLoaderManager<T> extends EventDispatcher
 
     private function handleLoaderComplete(e:LoaderEvent):Void
     {
-
         var loader:IExternalLoader<T> = cast e.loader;
         loader.removeListener(LoaderEvent.COMPLETE, handleLoaderComplete);
         loader.prepare();
@@ -117,7 +116,6 @@ class BaseLoaderManager<T> extends EventDispatcher
         var id:String = loader.id;
         loadQueue[id] = COMPLETE;
         checkLoadSequence();
-
     }
 
     public function findAgent(deliverable:ExternalDeliverable<Dynamic>):IExternalLoader<T>
@@ -130,18 +128,6 @@ class BaseLoaderManager<T> extends EventDispatcher
                 return loader;
             }
         }
-
-        // from this point on we get that no agent is available, to lets trace what happened
-        /*
-        trace ("*--------------------------------*");
-        trace ("No agent found for ", deliverable.id);
-        for (loader in loaders)
-        {
-            trace ("Agent:",loader.id, "isReady:" + loader.ready, "canDeliver:false");
-        }
-        trace ("Returning Null");
-        trace ("*--------------------------------*");
-        */
 
         return null;
     }

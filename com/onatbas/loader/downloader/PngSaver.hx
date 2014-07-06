@@ -43,40 +43,17 @@ class PngSaver implements IFileSaver<BitmapData>
     public function isSaved():Bool
     {
 
-
         if (!FileSystem.exists(path))
         {
             FileSystem.createDirectory(path);
         }
-
 
         #if html5
         throw("You can not use saver classes in js target");
         return false;
 
         #else
-
-   /*     var paths = getCompletePath().split("/");
-
-        trace ("path control", getCompletePath(), paths);
-        var current = "";
-        for (sub in paths)
-        {
-            current += sub;
-            if (!FileSystem.exists(current))
-            {
-                trace("bu path yok", current);
-                return false;
-            }
-            else
-            {
-                trace("bu path var", current);
-            }
-            current += "/";
-        }
-*/
         return FileSystem.exists(getCompletePath());
-
         #end
     }
 

@@ -1,0 +1,11 @@
+{
+	"name": "akaloader",
+	"url" : "https://github.com/onatbas/AkaLoader",
+	"license": "MIT",
+	"tags": ["cross", "filesystem", "file", "loader", "utility"],
+	"description": "Some description here",
+	"version": "1.0",
+	"releasenote": "Some release notes here",
+	"contributors": ["onatbas"],
+	"dependencies": { "openfl": ""}
+}
