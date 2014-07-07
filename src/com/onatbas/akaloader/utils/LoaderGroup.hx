@@ -14,7 +14,7 @@ class LoaderGroup {
 	}
 	
 	public static function getManager(id:String):AkaLoader {
-		managers[id];
+		return managers[id];
 	}
 	
 	public static function unregisterManager(id:String) {
