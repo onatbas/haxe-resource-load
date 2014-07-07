@@ -1,8 +1,8 @@
-package com.onatbas.loader.downloader;
+package com.onatbas.akaloader.savers ;
 
-import com.onatbas.loader.loaders.ByteArrayLoader;
+import com.onatbas.akaloader.loaders.ByteArrayLoader;
 import com.onatbas.loader.event.LoaderEvent;
-import com.onatbas.loader.downloader.ByteArraySaver;
+import com.onatbas.akaloader.savers.ByteArraySaver;
 import flash.events.EventDispatcher;
 import flash.utils.ByteArray;
 import com.onatbas.loader.loaders.IExternalLoader;

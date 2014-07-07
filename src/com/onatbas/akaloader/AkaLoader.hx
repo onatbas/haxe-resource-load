@@ -1,7 +1,7 @@
-package com.onatbas.loader;
+package com.onatbas.akaloader ;
 
-import com.onatbas.loader.loaders.BaseLoader;
-import com.onatbas.loader.loaders.BaseLoader.LoaderStatus;
+import com.onatbas.akaloader.loaders.BaseLoader;
+import com.onatbas.akaloader.loaders.BaseLoader.LoaderStatus;
 import flash.display.BitmapData;
 import flash.utils.ByteArray;
 import openfl.events.Event;
@@ -199,7 +199,7 @@ class AkaLoader extends EventDispatcher
 	 */
 	public function getAssetType(id:String):AssetType {
 		var loader = manager.findLoader(id);
-		if (loader != null) 
+		if (loader != null)
 		{
 			return loader.type;
 		}

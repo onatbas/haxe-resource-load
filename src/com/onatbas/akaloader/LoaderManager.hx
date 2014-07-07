@@ -1,6 +1,6 @@
-package com.onatbas.loader;
+package com.onatbas.akaloader ;
 
-import com.onatbas.loader.loaders.BaseLoader;
+import com.onatbas.akaloader.loaders.BaseLoader;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 
@@ -34,12 +34,6 @@ class LoaderManager extends EventDispatcher
 	
     public function loadList(list:Array<String>):Bool
     {
-		if (loadQueue.length > 0) 
-		{
-			return false;
-			trace("Loader manager already loading another list");
-		}
-
         var id:String;
         for (id in list)
         {

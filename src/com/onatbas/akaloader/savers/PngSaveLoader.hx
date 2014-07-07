@@ -1,4 +1,4 @@
-package com.onatbas.loader.downloader;
+package com.onatbas.akaloader.savers ;
 /**
  * @author Onat Baş
  * 25.01.2014
@@ -6,7 +6,7 @@ package com.onatbas.loader.downloader;
  * */
 
 import com.onatbas.loader.event.LoaderEvent;
-import com.onatbas.loader.loaders.BitmapLoader;
+import com.onatbas.akaloader.loaders.BitmapLoader;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.display.BitmapData;

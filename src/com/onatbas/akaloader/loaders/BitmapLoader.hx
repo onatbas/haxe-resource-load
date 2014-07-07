@@ -1,12 +1,12 @@
-package com.onatbas.loader.loaders;
+package com.onatbas.akaloader.loaders ;
 
-import com.onatbas.loader.loaders.BaseLoader.LoaderStatus;
-import flash.display.Bitmap;
-import flash.display.BitmapData;
+import com.onatbas.akaloader.loaders.BaseLoader.LoaderStatus;
 import flash.display.Loader;
 import flash.events.Event;
 import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
 
 
 class BitmapLoader extends BaseLoader

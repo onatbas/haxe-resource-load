@@ -1,10 +1,11 @@
-package com.onatbas.loader.loaders;
-import flash.display.BitmapData;
-import flash.net.URLRequest;
+package com.onatbas.akaloader.loaders ;
+import com.onatbas.akaloader.loaders.BaseLoader;
+import openfl.display.BitmapData;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.media.Sound;
 import openfl.net.URLLoader;
+import openfl.net.URLRequest;
 import openfl.utils.ByteArray;
 
 
@@ -48,7 +49,6 @@ class BaseLoader extends EventDispatcher {
 	function prepare() {
 		data = loader.data;
 	}
-
 	
 	public function reset(dispose:Bool) {
 		status = LoaderStatus.IDLE;

@@ -1,4 +1,4 @@
-package com.onatbas.loader.loaders;
+package com.onatbas.akaloader.loaders ;
 
 
 class TextLoader extends BaseLoader

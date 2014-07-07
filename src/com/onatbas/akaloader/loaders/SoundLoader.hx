@@ -1,4 +1,4 @@
-package com.onatbas.loader.loaders;
+package com.onatbas.akaloader.loaders ;
 /**
  * @author Onat Baş
  * 11.02.2014

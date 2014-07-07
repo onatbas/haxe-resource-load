@@ -1,4 +1,4 @@
-package com.onatbas.loader;
+package com.onatbas.akaloader ;
 
 enum AssetType
 {

@@ -1,4 +1,4 @@
-package com.onatbas.loader.downloader;
+package com.onatbas.akaloader.savers ;
 /**
  * @author Onat Baş
  * 25.01.2014
@@ -7,7 +7,7 @@ package com.onatbas.loader.downloader;
 
 import com.onatbas.loader.event.LoaderEvent;
 import flash.events.Event;
-import com.onatbas.loader.loaders.TextLoader;
+import com.onatbas.akaloader.loaders.TextLoader;
 import flash.events.EventDispatcher;
 import com.onatbas.loader.loaders.IExternalLoader;
 class TextSaveLoader implements IExternalLoader<String>

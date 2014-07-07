@@ -1,4 +1,4 @@
-package com.onatbas.loader.downloader;
+package com.onatbas.akaloader.savers ;
 /**
  * @author Onat Baş
  * 12.02.2014
@@ -7,7 +7,7 @@ package com.onatbas.loader.downloader;
 
 import flash.utils.ByteArray;
 import com.onatbas.loader.event.LoaderEvent;
-import com.onatbas.loader.loaders.SoundLoader;
+import com.onatbas.akaloader.loaders.SoundLoader;
 import com.onatbas.loader.loaders.IExternalLoader;
 import flash.events.EventDispatcher;
 import flash.media.Sound;
