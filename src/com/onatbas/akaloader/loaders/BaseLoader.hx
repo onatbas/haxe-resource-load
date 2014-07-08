@@ -7,14 +7,9 @@ import openfl.media.Sound;
 import openfl.net.URLLoader;
 import openfl.net.URLRequest;
 import openfl.utils.ByteArray;
+import com.onatbas.akaloader.misc.FileType;
+import com.onatbas.akaloader.misc.LoaderStatus;
 
-
-enum LoaderStatus {
-	IDLE;
-	FAILED;
-	LOADING;
-	LOADED;
-}
 /**
  * ...
  * @author TiagoLr
@@ -23,32 +18,34 @@ class BaseLoader extends EventDispatcher {
 
 	/** The default loader, set to null to use other loader instead */
     var loader:URLLoader;
-	var request:String;
 	
-	public var type(default, null):AssetType;
+	public var type(default, null):FileType;
 	public var id(default, null):String;
 	public var data(default, null):Dynamic;
 	public var status(default, null):LoaderStatus;
 	
-	function new(id:String, request:String) {
+	function new(id:String, type:FileType) {
 		super();
 		this.id = id;
-		this.request = request;
 		this.data = null;
+		this.type = type;
 		status = LoaderStatus.IDLE;
-		type = AssetType.DYNAMIC;
 		loader = new URLLoader();
         loader.addEventListener(Event.COMPLETE, handleComplete);
 	}
 	
 	function handleComplete(e:Event) {
-		prepare();
+		processData();
 		status = LoaderStatus.LOADED;
         dispatchEvent(new Event(Event.COMPLETE));
     }
 	
-	function prepare() {
+	function processData() {
 		data = loader.data;
+	}
+	
+	public function prepare() {
+		status = LoaderStatus.READY;
 	}
 	
 	public function reset(dispose:Bool) {
@@ -59,7 +56,7 @@ class BaseLoader extends EventDispatcher {
 	
 	public function start() {
 		this.status = LoaderStatus.LOADING;
-		loader.load(new URLRequest(request));
+		loader.load(new URLRequest(id));
 	}
 	
 }

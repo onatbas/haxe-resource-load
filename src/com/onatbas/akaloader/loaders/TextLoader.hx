@@ -1,14 +1,14 @@
 package com.onatbas.akaloader.loaders ;
+import com.onatbas.akaloader.misc.FileType;
 
 
 class TextLoader extends BaseLoader
 {
-    public function new(id:String, request:String) {
-        super(id, request);
-		this.type = AssetType.TEXT;
+    public function new(id:String) {
+        super(id, FileType.TEXT);
     }
 
-    override function prepare() {
+    override function processData() {
 		data = Std.string(loader.data);
 	}
 }

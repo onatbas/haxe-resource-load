@@ -1,6 +1,7 @@
 package com.onatbas.akaloader.loaders ;
 
-import com.onatbas.akaloader.loaders.BaseLoader.LoaderStatus;
+import com.onatbas.akaloader.misc.LoaderStatus;
+import com.onatbas.akaloader.misc.FileType;
 import flash.display.Loader;
 import flash.events.Event;
 import flash.net.URLLoaderDataFormat;
@@ -13,10 +14,9 @@ class BitmapLoader extends BaseLoader
 {
 	var flashLoader:Loader;
 	
-    public function new(id:String, url:String)
+    public function new(id:String)
     {
-		super(id, url);
-		this.type = AssetType.BITMAP;
+		super(id, FileType.BITMAP);
 		#if ( flash || html5 )
 		flashLoader = new Loader();
         flashLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, handleComplete);
@@ -25,7 +25,7 @@ class BitmapLoader extends BaseLoader
         #end
     }
 	
-	override function prepare() {
+	override function processData() {
 		#if (flash || html5)
 		data = cast(flashLoader.content, Bitmap).bitmapData;
 		#else
@@ -37,9 +37,9 @@ class BitmapLoader extends BaseLoader
 	{
 		status = LoaderStatus.LOADING;
 		#if (flash || html5) 
-		flashLoader.load(new URLRequest(request));
+		flashLoader.load(new URLRequest(id));
 		#else 
-		loader.load(new URLRequest(request));
+		loader.load(new URLRequest(id));
 		#end
 	}
 
