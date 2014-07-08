@@ -1,4 +1,4 @@
-package com.onatbas.akaloader.utils;
+package com.onatbas.akaloader.misc ;
 import com.onatbas.akaloader.AkaLoader;
 
 /**

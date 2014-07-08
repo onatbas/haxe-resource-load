@@ -1,7 +1,9 @@
 package com.onatbas.akaloader ;
 
+import com.onatbas.akaloader.AkaLoader.FType;
 import com.onatbas.akaloader.loaders.BaseLoader;
 import com.onatbas.akaloader.loaders.BaseLoader.LoaderStatus;
+import com.onatbas.akaloader.LoaderManager;
 import flash.display.BitmapData;
 import flash.utils.ByteArray;
 import openfl.events.Event;
@@ -15,11 +17,10 @@ class AkaLoader extends EventDispatcher
 {
 	var manager:LoaderManager;
 	
-    public function new(maxConnectionLimit:Int = 1)
-    {
+    public function new(maxConnectionLimit:Int = 3) {
 		super();
 		manager = new LoaderManager(maxConnectionLimit);
-		manager.onCompleteCallback = function () { dispatchEvent(new Event(Event.COMPLETE)); }
+		manager.addEventListener(Event.COMPLETE, function (_) { dispatchEvent(new Event(Event.COMPLETE)); } );
     }
 	
 	/**
@@ -38,12 +39,13 @@ class AkaLoader extends EventDispatcher
 	public function loadFile(id:String):Bool {
 		return manager.loadList([id]);
 	}
+	
 	/**
 	 * Loads multiple files, must haxe been added loader for each file id.
 	 * Dispatches Event.COMPLETE when all files finish loading.
 	 * @param	list
 	 */
-	public function loadList(list:Array<String>):Bool {
+	public function loadFileList(list:Array<String>):Bool {
 		return manager.loadList(list);
 	}
 	
@@ -53,7 +55,7 @@ class AkaLoader extends EventDispatcher
 	 * @param	list
 	 * @param	dispose		Disposes loaded assets.
 	 */
-	public function unloadList(list:Array<String>, dispose:Bool = true) {
+	public function unloadFileList(list:Array<String>, dispose:Bool = true) {
 		manager.unloadList(list, dispose);
 	}
 	
@@ -127,25 +129,6 @@ class AkaLoader extends EventDispatcher
 		if (loader != null && loader.data != null) 
 		{
 			if (Std.is(loader.data, String))
-			{
-				return loader.data;
-			}
-		}
-        return null;
-    }
-	
-	/**
-	 * Gets loaded asset with matching id as list of texture names.
-	 * If it is not found returns null.
-	 * @param	id		The asset id.
-	 * @return 			Loaded data.
-	 */
-    public function getTextureList(id:String):Array<String>
-    {
-        var loader = manager.findLoader(id);
-		if (loader != null && loader.data != null)
-		{
-			if (Std.is(loader.data, Array))
 			{
 				return loader.data;
 			}

@@ -2,11 +2,9 @@ package com.onatbas.akaloader ;
 
 enum AssetType
 {
-	NOTYPE;
+	DYNAMIC;
     BITMAP;
     TEXT;
-    ATLAS;
-    TEXTURELIST;
     SOUND;
 	BYTES;
 }

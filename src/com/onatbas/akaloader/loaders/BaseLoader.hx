@@ -34,8 +34,9 @@ class BaseLoader extends EventDispatcher {
 		super();
 		this.id = id;
 		this.request = request;
+		this.data = null;
 		status = LoaderStatus.IDLE;
-		type = AssetType.NOTYPE;
+		type = AssetType.DYNAMIC;
 		loader = new URLLoader();
         loader.addEventListener(Event.COMPLETE, handleComplete);
 	}

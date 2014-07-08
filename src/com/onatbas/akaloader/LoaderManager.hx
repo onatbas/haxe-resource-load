@@ -7,7 +7,6 @@ import flash.events.EventDispatcher;
 
 class LoaderManager extends EventDispatcher
 {
-	public var onCompleteCallback:Void->Void;
     public var loaders(default, null):Map<String, BaseLoader>;
     private var loadQueue:Array<BaseLoader>;
     public var maxConnectionLimit(default, null):Int;
@@ -34,7 +33,6 @@ class LoaderManager extends EventDispatcher
 	
     public function loadList(list:Array<String>):Bool
     {
-        var id:String;
         for (id in list)
         {
 			var l = findLoader(id);
@@ -46,7 +44,6 @@ class LoaderManager extends EventDispatcher
             }
 
         }
-        checkLoadSequence();
 		return true;
     }
 
@@ -103,7 +100,6 @@ class LoaderManager extends EventDispatcher
     function onLoadListComplete():Void
     {
 		loadQueue = new Array<BaseLoader>();
-		onCompleteCallback();
         dispatchEvent(new Event(Event.COMPLETE));
     }
 }
