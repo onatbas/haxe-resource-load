@@ -1,6 +1,6 @@
 package com.onatbas.akaloader.misc;
 
-typedef File = {
+typedef FileInfo = {
 	id:String,
 	type:FileType,
 	status:LoaderStatus,

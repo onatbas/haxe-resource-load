@@ -1,8 +1,11 @@
 package com.onatbas.akaloader.loaders ;
 import com.onatbas.akaloader.loaders.BaseLoader;
 import openfl.display.BitmapData;
+import openfl.events.ErrorEvent;
 import openfl.events.Event;
 import openfl.events.EventDispatcher;
+import openfl.events.IOErrorEvent;
+import openfl.events.SecurityErrorEvent;
 import openfl.media.Sound;
 import openfl.net.URLLoader;
 import openfl.net.URLRequest;
@@ -23,6 +26,7 @@ class BaseLoader extends EventDispatcher {
 	public var id(default, null):String;
 	public var data(default, null):Dynamic;
 	public var status(default, null):LoaderStatus;
+	public var error(default, null):String;
 	
 	function new(id:String, type:FileType) {
 		super();
@@ -32,6 +36,8 @@ class BaseLoader extends EventDispatcher {
 		status = LoaderStatus.IDLE;
 		loader = new URLLoader();
         loader.addEventListener(Event.COMPLETE, handleComplete);
+		loader.addEventListener(IOErrorEvent.IO_ERROR, onLoadFail);
+		loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadFail);
 	}
 	
 	function handleComplete(e:Event) {
@@ -39,6 +45,13 @@ class BaseLoader extends EventDispatcher {
 		status = LoaderStatus.LOADED;
         dispatchEvent(new Event(Event.COMPLETE));
     }
+	
+	function onLoadFail(e:ErrorEvent) {
+		data = null;
+		error = e.toString();
+		status = LoaderStatus.ERROR;
+		dispatchEvent(new Event(Event.COMPLETE));
+	}
 	
 	function processData() {
 		data = loader.data;

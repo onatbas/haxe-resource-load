@@ -8,6 +8,9 @@ import flash.net.URLLoaderDataFormat;
 import flash.net.URLRequest;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
+import openfl.events.ErrorEvent;
+import openfl.events.IOErrorEvent;
+import openfl.events.SecurityErrorEvent;
 
 
 class BitmapLoader extends BaseLoader
@@ -20,6 +23,8 @@ class BitmapLoader extends BaseLoader
 		#if ( flash || html5 )
 		flashLoader = new Loader();
         flashLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, handleComplete);
+        flashLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadFail);
+		flashLoader.contentLoaderInfo.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLoadFail);
         #else
         loader.dataFormat = URLLoaderDataFormat.BINARY;
         #end

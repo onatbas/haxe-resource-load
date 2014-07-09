@@ -8,15 +8,18 @@ import flash.events.EventDispatcher;
 
 class LoaderManager extends EventDispatcher
 {
+	// dispatched when file load finishes (with error or success).
+	public static inline var EVT_FILE_LOAD_COMPLETE:String = "evtFileLoadComplete";
+	
     var loadQueue:Array<BaseLoader>;
 	var activeLoads:Int;
-	
 	
     public var loaders(default, null):Map<String, BaseLoader>;
 	/** Max number of simultaneous loads */
     public var maxConnectionLimit(default, null):Int;
 	/** Stores loaded files id, cleans up list after all queued files are loaded */
 	public var loadedFiles(default, null):Array<String>; 
+	
 
     public function new(maxConnectionLimit:Int = 1)
     {
@@ -45,10 +48,11 @@ class LoaderManager extends EventDispatcher
         for (id in list)
         {
 			var l = findLoader(id);
+			
             if (l != null && l.status != LoaderStatus.LOADING && l.status != LoaderStatus.READY)
             {
                 loadQueue.push(l);
-				l.addEventListener(Event.COMPLETE, handleLoaderComplete);
+				l.addEventListener(Event.COMPLETE, onFileLoaded);
 				l.prepare();
             }
 			checkLoadSequence();
@@ -71,11 +75,17 @@ class LoaderManager extends EventDispatcher
 	
 	public function remove(id:String, dispose:Bool):Bool {
 		var loader = findLoader(id);
-		if (loader != null && loader.status != LoaderStatus.LOADING) {
+		
+		// if loader exists and has not begun loading process, remove it.
+		if (loader != null && loader.status != LoaderStatus.LOADING && loader.status != LoaderStatus.READY) {
 			loader.reset(dispose);
 			loaders.remove(id);
+			if (loadedFiles.indexOf(id) != -1) {
+				loadedFiles.remove(id);
+			}
 			return true;
 		}
+		
 		return false;
 	}
 	
@@ -113,13 +123,20 @@ class LoaderManager extends EventDispatcher
         }
     }
 	
-	function handleLoaderComplete(e:Event):Void
+	function onFileLoaded(e:Event):Void
     {
         var loader:BaseLoader = cast e.currentTarget;
-        loader.removeEventListener(Event.COMPLETE, handleLoaderComplete);
-		
+        loader.removeEventListener(Event.COMPLETE, onFileLoaded);
 		activeLoads--;
-		loadedFiles.push(loader.id);
+		
+		if (loadedFiles.indexOf(loader.id) == -1) {
+			loadedFiles.remove(loader.id);
+		}
+		
+		// places last loaded file at the end of the loaded files list.
+		loadedFiles.push(loader.id); 
+		dispatchEvent(new Event(EVT_FILE_LOAD_COMPLETE));
+		
         checkLoadSequence();
     }
 
