@@ -1,13 +1,13 @@
-package com.onatbas.akaloader ;
+package assets.manager ;
 
-import com.onatbas.akaloader.loaders.BitmapLoader;
-import com.onatbas.akaloader.loaders.ByteArrayLoader;
-import com.onatbas.akaloader.loaders.LoaderManager;
-import com.onatbas.akaloader.loaders.SoundLoader;
-import com.onatbas.akaloader.loaders.TextLoader;
-import com.onatbas.akaloader.misc.FileInfo;
-import com.onatbas.akaloader.misc.FileType;
-import com.onatbas.akaloader.misc.LoaderStatus;
+import assets.manager.loaders.ImageLoader;
+import assets.manager.loaders.BinaryLoader;
+import assets.manager.loaders.LoaderManager;
+import assets.manager.loaders.SoundLoader;
+import assets.manager.loaders.TextLoader;
+import assets.manager.misc.FileInfo;
+import assets.manager.misc.FileType;
+import assets.manager.misc.LoaderStatus;
 import msignal.Signal.Signal1;
 import openfl.events.Event;
 
@@ -22,16 +22,17 @@ class FileLoader
 {
 	/** Manager instance used to load files */
 	public var manager:LoaderManager;
-	/** Dispatched when files are loaded and there are no more files loading. */
+	/** Dispatched when files are loaded and there are no more files to load. */
 	public var onFilesLoaded:Signal1<Array<FileInfo>>;
-	/** Dispatched when files fail to load and there are no more files loading. */
+	/** Dispatched when files fail to load and there are no more files to load. */
 	public var onFilesLoadError:Signal1<Array<FileInfo>>;
 	/** Dispatched every time a file is loaded. */
 	public var onFileLoaded:Signal1<FileInfo>;
 	/** Dispatched every time a file fails to load. */
 	public var onFileLoadError:Signal1<FileInfo>;
+	/** List of queued files, read only. */
+	public var queuedFiles(default, null):Array<String>;
 	
-	var queuedFiles:Array<String>;
 	
     public function new(maxConnectionLimit:Int = 3) {
 		onFilesLoaded = new Signal1<Array<FileInfo>>();
@@ -49,6 +50,7 @@ class FileLoader
 	 * Loads file
 	 * @param	id	 	The file relative or full path or URL.
 	 * @param 	type	The type of data to be loaded.
+	 * @param	timeout	Time (ms) before request timeout.
 	 */
 	public function loadFile(id:String, type:FileType) {
 		if (!exists(id)) {
@@ -75,8 +77,14 @@ class FileLoader
 	 * Loads all queued files.
 	 */
 	public function loadQueuedFiles() {
-		manager.loadList(queuedFiles);
-		queuedFiles = new Array<String>();
+		
+		if (queuedFiles.length == 0) {
+			return;
+		}
+		
+		var qf = queuedFiles.copy();
+		queuedFiles = new Array<String>(); // reset queued files before starting operation.
+		manager.loadList(qf);
 	}
 	
 	/**
@@ -149,9 +157,9 @@ class FileLoader
 	//---------------------------------------------------------------------------------
 	function addLoader(id, type) {
 		switch (type) {
-			case BITMAP: manager.addLoader(new BitmapLoader(id));
+			case IMAGE: manager.addLoader(new ImageLoader(id));
 			case TEXT:	 manager.addLoader(new TextLoader(id));
-			case BYTES:	 manager.addLoader(new ByteArrayLoader(id));
+			case BINARY:	 manager.addLoader(new BinaryLoader(id));
 			case SOUND:	 manager.addLoader(new SoundLoader(id));
 		}
 	}

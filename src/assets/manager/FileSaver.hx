@@ -1,4 +1,4 @@
-package com.onatbas.akaloader ;
+package assets.manager ;
 #if (cpp || neko || php)
 import haxe.io.Bytes;
 import sys.io.FileOutput;

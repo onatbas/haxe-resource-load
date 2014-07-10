@@ -1,7 +1,7 @@
-package com.onatbas.akaloader.loaders ;
+package assets.manager.loaders ;
 
-import com.onatbas.akaloader.loaders.BaseLoader;
-import com.onatbas.akaloader.misc.LoaderStatus;
+import assets.manager.loaders.BaseLoader;
+import assets.manager.misc.LoaderStatus;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 
@@ -44,7 +44,8 @@ class LoaderManager extends EventDispatcher
     }
 	
     public function loadList(list:Array<String>)
-    {
+    {	
+		loadedFiles = new Array<String>();
         for (id in list)
         {
 			var l = findLoader(id);
@@ -55,8 +56,8 @@ class LoaderManager extends EventDispatcher
 				l.addEventListener(Event.COMPLETE, onFileLoaded);
 				l.prepare();
             }
-			checkLoadSequence();
         }
+		checkLoadSequence();
     }
 
     public function unloadList(list:Array<String>, dispose:Bool):Void
@@ -128,8 +129,9 @@ class LoaderManager extends EventDispatcher
         var loader:BaseLoader = cast e.currentTarget;
         loader.removeEventListener(Event.COMPLETE, onFileLoaded);
 		activeLoads--;
+		loadQueue.remove(loader);
 		
-		if (loadedFiles.indexOf(loader.id) == -1) {
+		if (loadedFiles.indexOf(loader.id) != -1) {
 			loadedFiles.remove(loader.id);
 		}
 		
@@ -143,7 +145,5 @@ class LoaderManager extends EventDispatcher
     function onLoadListComplete():Void
     {
         dispatchEvent(new Event(Event.COMPLETE));
-		loadQueue = new Array<BaseLoader>();
-		loadedFiles = new Array<String>();
     }
 }

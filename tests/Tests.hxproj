@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project version="2">
   <!-- Output SWF options -->
   <output>
@@ -16,14 +16,23 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,1" />
+    <class path="C:\HaxeToolkit\haxe\lib\mcover\2,0,3" />
+    <class path="C:\HaxeToolkit\haxe\lib\mconsole\1,6,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\akaloader\git\src" />
+    <class path="C:\HaxeToolkit\haxe\lib\msignal\1,2,2" />
+    <class path="C:\HaxeToolkit\haxe\lib\async-tests\git\src" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,1\backends\flash" />
+    <class path="bin\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
+    <option directives="mcover=2.0.3&#xA;mconsole=1.6.0&#xA;akaloader=1.0&#xA;openfl=2.0.1&#xA;msignal=1.2.2&#xA;async-tests=1.0.0&#xA;tools=1.5.7&#xA;SHOW_CONSOLE&#xA;openfl-flash&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;--remap flash:openfl&#xA;--macro mcover.MCover.coverage([''], ['../src'], null)&#xA;#--macro keep(&quot;TestRunner&quot;)" />
+    <option additional="--no-output&#xA;--macro mcover.MCover.coverage([''], ['../src'], null)&#xA;-swf-version 11.2" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -35,6 +44,7 @@
   </compileTargets>
   <!-- Assets to embed into the output SWF -->
   <library>
+    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
   </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>

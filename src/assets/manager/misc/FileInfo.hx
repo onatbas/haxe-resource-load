@@ -1,4 +1,4 @@
-package com.onatbas.akaloader.misc;
+package assets.manager.misc ;
 
 typedef FileInfo = {
 	id:String,
