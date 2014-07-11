@@ -1,4 +1,4 @@
-package assets.manager.loaders ;
+package assets.manager.loaders;
 
 import flash.net.URLLoaderDataFormat;
 import assets.manager.misc.FileType;

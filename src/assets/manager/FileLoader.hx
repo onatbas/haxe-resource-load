@@ -1,4 +1,4 @@
-package assets.manager ;
+package assets.manager;
 
 import assets.manager.loaders.ImageLoader;
 import assets.manager.loaders.BinaryLoader;

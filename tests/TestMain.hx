@@ -1,4 +1,4 @@
-package ;
+package;
 import async.tests.AsyncTestRunner;
 
 class TestMain {
@@ -7,6 +7,7 @@ class TestMain {
         var r = new AsyncTestRunner(onCompleteTests);
 		
 		r.add(new TestLoadFiles());
+		r.add(new TestSaveFiles());
         r.run();
     }
 	

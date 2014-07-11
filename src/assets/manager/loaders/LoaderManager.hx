@@ -1,4 +1,4 @@
-package assets.manager.loaders ;
+package assets.manager.loaders;
 
 import assets.manager.loaders.BaseLoader;
 import assets.manager.misc.LoaderStatus;

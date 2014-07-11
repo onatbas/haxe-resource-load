@@ -1,4 +1,4 @@
-package assets.manager ;
+package assets.manager;
 #if (cpp || neko || php)
 import haxe.io.Bytes;
 import sys.io.FileOutput;
@@ -19,12 +19,12 @@ class FileSaver {
 	/**
 	 * Saves a png image file. 
 	 * If file does not exist it will be created (including parent directories).
-	 * @param	fullPath	The file path (absolute or relative) eg: "dir/file.ext"
+	 * @param	filePath	The file path (absolute or relative) eg: "dir/file.ext"
 	 * @param	data		The data to save to the file.
 	 * @return				Operation failed or successful.
 	 */
-	static public function saveAsPng(fullPath:String, data:BitmapData):Bool {
-		var path:Path = validate(fullPath, data);
+	static public function saveAsPng(filePath:String, data:BitmapData):Bool {
+		var path:Path = validate(filePath, data);
 		
 		if (path == null) {
 			return false;
@@ -32,7 +32,7 @@ class FileSaver {
 		
 		try {
 			var ba:ByteArray = data.encode('png');
-			File.saveBytes(fullPath, cast (ba, Bytes));
+			File.saveBytes(path.toString(), cast (ba, Bytes));
 		} catch(e:Dynamic) {
             trace ("Save Failed " + Std.string(e));
 			return false;
@@ -44,12 +44,12 @@ class FileSaver {
 	/**
 	 * Saves a text file. 
 	 * If file does not exist it will be created (including parent directories).
-	 * @param	fullPath	The file path (absolute or relative) eg: "dir/file.ext"
+	 * @param	filePath	The file path (absolute or relative) eg: "dir/file.ext"
 	 * @param	data		The data to save to the file.
 	 * @return				Operation failed or successful.
 	 */
-	static public function saveAsText(fullPath:String, data:String):Bool {
-		var path:Path = validate(fullPath, data);
+	static public function saveAsText(filePath:String, data:String):Bool {
+		var path:Path = validate(filePath, data);
 		
 		if (path == null) {
 			return false;
@@ -72,8 +72,8 @@ class FileSaver {
 	 * @param	data		The data to save to the file.
 	 * @return				Operation failed or successful.
 	 */
-	static public function saveAsBytes(fullPath:String, data:ByteArray):Bool {
-		var path:Path = validate(fullPath, data);
+	static public function saveAsBytes(filePath:String, data:ByteArray):Bool {
+		var path:Path = validate(filePath, data);
 		
 		if (path == null) {
 			return false;
