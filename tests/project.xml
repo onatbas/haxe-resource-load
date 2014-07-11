@@ -10,8 +10,9 @@
     <!-- Compile with flag COVERAGE to view code coverage, eg: lime test neko -DCOVERAGE --> 
     <!-- Adjust packages classpath (['../src']) if necessary -->
 	<haxelib name="mcover"/>
-	<haxelib name="akaloader" />
+	<haxelib name="assetsmanager" />
 	<haxelib name="async-tests" />
+	<haxelib name="mlib" />
 	<haxeflag name="--macro" value="mcover.MCover.coverage([''], ['../src'], null)" />
 	
 	<assets path="assets" embed="false" />

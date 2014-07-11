@@ -8,6 +8,7 @@ class TestMain {
 		
 		r.add(new TestLoadFiles());
 		r.add(new TestSaveFiles());
+		r.add(new TestFolderTree());
         r.run();
     }
 	

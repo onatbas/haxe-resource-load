@@ -1,5 +1,5 @@
 {
-	"name": "akaloader",
+	"name": "assetsmanager",
 	"url" : "https://github.com/onatbas/AkaLoader",
 	"license": "MIT",
 	"tags": ["cross", "filesystem", "file", "loader", "utility"],
