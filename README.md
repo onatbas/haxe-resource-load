@@ -16,7 +16,7 @@ Assets Manager is based of [AkaLoader](https://github.com/onatbas/AkaLoader) by 
 * **FolderTree** - Reads folder structure **(native targets)**
 
 **msignal** and **mlib** are also required by some of the components.
-
+To it install use `haxelib install assetsmanager`
 #FileLoader
 
 Uses openfl URLLoader to load external files. Full-path, relative path or URL can be used, full-path not available for flash target (and html5?).
