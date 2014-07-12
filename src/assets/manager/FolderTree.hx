@@ -64,6 +64,11 @@ class FolderTree {
 	//---------------------------------------------------------------------------------
 	//  FOLDER TREE METHODS
 	//---------------------------------------------------------------------------------
+	/**
+	 * Sets root folder path.
+	 * @param	path	Relative or absolute path to the root folder.
+	 * @return
+	 */
 	public function setRoot(path:String):Bool {
 		
 		#if (cpp || neko || php)
@@ -102,7 +107,8 @@ class FolderTree {
 	
 	/**
 	 * Rebuilds node tree.
-	 * Use setRoot, to set the root directory for native targets.
+	 * If XML file is set, will read files tree from the xml.
+	 * Otherwise will read contents recursively from root path.
 	 */
 	public function refreshTree() {
 		

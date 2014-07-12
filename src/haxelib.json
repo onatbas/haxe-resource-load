@@ -1,11 +1,11 @@
 {
 	"name": "assetsmanager",
-	"url" : "https://github.com/onatbas/AkaLoader",
+	"url" : "https://github.com/prog4mr/assetsmanager",
 	"license": "MIT",
 	"tags": ["cross", "filesystem", "file", "loader", "utility"],
-	"description": "Some description here",
+	"description": "File loader/saver utils and more.",
 	"version": "1.0",
-	"releasenote": "Some release notes here",
+	"releasenote": "First release",
 	"contributors": ["onatbas"],
-	"dependencies": { "openfl": ""}
+	"dependencies": { "mlib": "", "msignal", ""}
 }
