@@ -33,10 +33,10 @@ Here is an example on how to load a single and multiple files, and listening to 
 ```actionscript
 var loader = new FileLoader();
 loader.onFilesLoaded.add(onComplete);
-loader.queueFile("C:/dir/image.png", FileFormat.IMAGE); // full path
-loader.queueFile("C:/dir/image.jpg", FileFormat.IMAGE); // full path
-loader.queueFile("text.txt", FileFormat.TEXT);          // local path
-loader.loadFile("C:/dir/text2.txt", FileFormat.TEXT);   // load single file
+loader.queueFile("C:/dir/image.png", FileType.IMAGE); // full path
+loader.queueFile("C:/dir/image.jpg", FileType.IMAGE); // full path
+loader.queueFile("text.txt", FileType.TEXT);          // local path
+loader.loadFile("C:/dir/text2.txt", FileType.TEXT);   // load single file
 loader.loadQueuedFiles();                               // load queued files
 
 function onComplete(files:Array<FileInfo>) {
