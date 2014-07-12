@@ -1,3 +1,5 @@
+#Assets Manager
+----------------
 Assets Manager provides utils to manage external files, its main features are:
 
 * Load external files.
@@ -20,10 +22,10 @@ Assets Manager is based of [AkaLoader](https://github.com/onatbas/AkaLoader) by 
 
 Uses openfl URLLoader to load external files. Full-path, relative path or URL can be used, full-path not available for flash target (and html5?).
 
-Files are loaded assynchronously, and diferent notifications are sent:
-* **onFileLoaded :** everytime a file is loaded successfully.
+Files are loaded asynchronously, and different notifications are sent:
+* **onFileLoaded :** every time a file is loaded successfully.
 * **onFilesLoaded :** when files are loaded and there are no more to load.
-* **onFileError :** everytime a file fails to load.
+* **onFileError :** every time a file fails to load.
 * **onFilesError :** when files fail to load and there are no more to load.
 
 
@@ -36,7 +38,7 @@ loader.queueFile("C:/dir/image.png", FileFormat.IMAGE); // full path
 loader.queueFile("C:/dir/image.jpg", FileFormat.IMAGE); // full path
 loader.queueFile("text.txt", FileFormat.TEXT);          // local path
 loader.loadFile("C:/dir/text2.txt", FileFormat.TEXT);   // load single file
-loader.loadQueuedFiles();                               // load queued files.
+loader.loadQueuedFiles();                               // load queued files
 
 function onComplete(files:Array<FileInfo>) {
     for (file in files) {
@@ -53,14 +55,14 @@ function onComplete(files:Array<FileInfo>) {
 Supported types:
 
 * **Image** - Png and jpg tested, retrieves data as BitmapData.
-* **Sound** - Ogg tested, retreive data as Sound.
+* **Sound** - Ogg tested, retrieve data as Sound.
 * **Text**  - Retrieve data as String.
 * **Binary** - Retrieve data as bytearray.
 
 #FileSaver
 Provides a shortcut to save files in different formats, also verifies path and creates directories if they don't exist.
 
-An example showing how to save diferent files:
+An example showing how to save different files:
 
 ```actionscript
 FileSaver.saveAsPNG("C:/File.png", myBitmapData);
