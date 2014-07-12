@@ -1,5 +1,4 @@
 #Assets Manager
-----------------
 Assets Manager provides utils to manage external files, its main features are:
 
 * Load external files.
