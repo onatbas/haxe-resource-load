@@ -1,7 +1,7 @@
 #Assets Manager
 Assets Manager provides utils to manage external files, its main features are:
 
-* Load external files.
+* Load external files. (no need to embed them or add \<assets\> tag)
 * Save files in different formats.
 * Queue files to load / load them at once.
 * Use relative, absolute path or url for files.
