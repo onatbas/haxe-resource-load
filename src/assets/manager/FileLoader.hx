@@ -1,5 +1,6 @@
 package assets.manager;
 
+import assets.manager.loaders.BaseLoader;
 import assets.manager.loaders.ImageLoader;
 import assets.manager.loaders.BinaryLoader;
 import assets.manager.loaders.LoaderManager;
@@ -24,39 +25,112 @@ class FileLoader
 	public var manager:LoaderManager;
 	/** Dispatched when files are loaded and there are no more files to load. */
 	public var onFilesLoaded:Signal1<Array<FileInfo>>;
-	/** Dispatched when files fail to load and there are no more files to load. */
-	public var onFilesLoadError:Signal1<Array<FileInfo>>;
 	/** Dispatched every time a file is loaded. */
 	public var onFileLoaded:Signal1<FileInfo>;
-	/** Dispatched every time a file fails to load. */
-	public var onFileLoadError:Signal1<FileInfo>;
 	/** List of queued files, read only. */
 	public var queuedFiles(default, null):Array<String>;
 	
+	/** List of callbacks specific to a file */
+	var uniqueCallbacks:Map < String, FileInfo->Void >;
 	
     public function new(maxConnectionLimit:Int = 3) {
 		onFilesLoaded = new Signal1<Array<FileInfo>>();
-		onFilesLoadError = new Signal1<Array<FileInfo>>();
 		onFileLoaded = new Signal1<FileInfo>();
-		onFileLoadError = new Signal1<FileInfo>();
+		uniqueCallbacks = new Map < String, FileInfo->Void > ();
 		queuedFiles = new Array<String>();
 		
 		manager = new LoaderManager(maxConnectionLimit);
 		manager.addEventListener(Event.COMPLETE, onManagerComplete);
 		manager.addEventListener(LoaderManager.EVT_FILE_LOAD_COMPLETE, onManagerFileComplete);
     }
-	
+	/**
+	 * Loads a text file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function loadText(id:String, ?onComplete:FileInfo->Void = null) {
+		loadFile(id, FileType.TEXT, onComplete);
+	}
+	/**
+	 * Loads an image file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function loadImage(id:String, ?onComplete:FileInfo->Void = null) {
+		loadFile(id, FileType.IMAGE, onComplete);
+	}
+	/**
+	 * Loads a binary file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function loadBinary(id:String, ?onComplete:FileInfo->Void = null) {
+		loadFile(id, FileType.BINARY, onComplete);
+	}
+	/**
+	 * Loads a text file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function loadSound(id:String, ?onComplete:FileInfo->Void = null) {
+		loadFile(id, FileType.SOUND, onComplete);
+	}
 	/**
 	 * Loads file
 	 * @param	id	 	The file relative or full path or URL.
 	 * @param 	type	The type of data to be loaded.
 	 * @param	timeout	Time (ms) before request timeout.
 	 */
-	public function loadFile(id:String, type:FileType) {
+	public function loadFile(id:String, type:FileType, ?onComplete:FileInfo->Void = null) {
+		
+		if (onComplete != null) {
+			if (!Reflect.isFunction(onComplete)) {
+				trace("Assets loader error: 'onComplete' is not a function");
+				return;
+			}
+			
+			uniqueCallbacks[id] = onComplete;
+		}
+		
 		if (!exists(id)) {
 			addLoader(id, type);
 		}
+		
 		manager.loadList([id]);
+	}
+	
+	
+	/**
+	 * Queues a text file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function queueText(id:String, ?onComplete:FileInfo->Void = null) {
+		queueFile(id, FileType.TEXT, onComplete);
+	}
+	/**
+	 * Queues an image file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function queueImage(id:String, ?onComplete:FileInfo->Void = null) {
+		queueFile(id, FileType.IMAGE, onComplete);
+	}
+	/**
+	 * Queues a binary file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function queueBinary(id:String, ?onComplete:FileInfo->Void = null) {
+		queueFile(id, FileType.BINARY, onComplete);
+	}
+	/**
+	 * Queues a sound file.
+	 * @param	id				The file relative or full path or url.
+	 * @param	onComplete		Callback when loading finishes.
+	 */
+	public function queueSound(id:String, ?onComplete:FileInfo->Void = null) {
+		queueFile(id, FileType.SOUND, onComplete);
 	}
 	
 	/**
@@ -64,10 +138,21 @@ class FileLoader
 	 * @param	id		The file relative or full path or URL.
 	 * @param	type	The type of data to be loaded.
 	 */
-	public function queueFile(id:String, type:FileType) {
+	public function queueFile(id:String, type:FileType, ?onComplete:FileInfo->Void = null) {
+		
+		if (onComplete != null) {
+			if (!Reflect.isFunction(onComplete)) {
+				trace("Assets loader error: 'onComplete' is not a function");
+				return;
+			}
+			
+			uniqueCallbacks[id] = onComplete;
+		}
+		
 		if (!exists(id)) {
 			addLoader(id, type);
 		}
+		
 		if (queuedFiles.indexOf(id) == -1) {
 			queuedFiles.push(id);
 		}
@@ -100,6 +185,10 @@ class FileLoader
 			// also remove file from queued list.
 			if (queuedFiles.indexOf(id) != -1) {
 				queuedFiles.remove(id);
+			}
+			
+			if (uniqueCallbacks.exists(id)) {
+				uniqueCallbacks.remove(id);
 			}
 			
 			return true;
@@ -158,9 +247,9 @@ class FileLoader
 	function addLoader(id, type) {
 		switch (type) {
 			case IMAGE: manager.addLoader(new ImageLoader(id));
-			case TEXT:	 manager.addLoader(new TextLoader(id));
-			case BINARY:	 manager.addLoader(new BinaryLoader(id));
-			case SOUND:	 manager.addLoader(new SoundLoader(id));
+			case TEXT: manager.addLoader(new TextLoader(id));
+			case BINARY: manager.addLoader(new BinaryLoader(id));
+			case SOUND:	manager.addLoader(new SoundLoader(id));
 		}
 	}
 	
@@ -178,14 +267,8 @@ class FileLoader
 	function onManagerComplete(e:Event):Void {
 		var loadedFiles = createInfoList(manager.loadedFiles);
 		
-		var loadedCompl = loadedFiles.filter( function (f:FileInfo) { return f.status == LoaderStatus.LOADED; } );
-		var loadedError = loadedFiles.filter( function (f:FileInfo) { return f.status == LoaderStatus.ERROR; } );
-		
-		if (loadedCompl.length > 0) {
-			onFilesLoaded.dispatch(loadedCompl);
-		}
-		if (loadedError.length > 0) {
-			onFilesLoadError.dispatch(loadedError);
+		if (loadedFiles.length > 0) {
+			onFilesLoaded.dispatch(loadedFiles);
 		}
 	}
 	
@@ -194,14 +277,15 @@ class FileLoader
 		var fileId = manager.loadedFiles[manager.loadedFiles.length - 1];
 		var file = getLoadedFile(fileId);
 		
-		if (file.status == LoaderStatus.LOADED) {
-			onFileLoaded.dispatch(file);
-		} else 
-		if (file.status == LoaderStatus.ERROR) {
-			onFileLoadError.dispatch(file);
-		} else {
-			throw "Error unknown file loaded status";
+		// calls specific callback if it exists when this file is loaded.
+		if (uniqueCallbacks.exists(fileId) {
+			var cbk = uniqueCallbacks[fileId];
+			uniqueCallbacks.remove(fileId);
+			cbk();
 		}
+		
+		// dispatches general signal when file is loaded.
+		onFileLoaded.dispatch(file);
 	}
 
 }
