@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["cross", "filesystem", "file", "loader", "utility"],
 	"description": "File loader/saver utils and more.",
-	"version": "1.0.0",
-	"releasenote": "First release",
+	"version": "1.1.0",
+	"releasenote": "Improved API",
 	"contributors": ["prog4mr"],
 	"dependencies": { "mlib": "", "msignal": ""}
 }

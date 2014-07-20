@@ -46,7 +46,7 @@ class FileLoader
 	/**
 	 * Loads a text file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function loadText(id:String, ?onComplete:FileInfo->Void = null) {
 		loadFile(id, FileType.TEXT, onComplete);
@@ -54,7 +54,7 @@ class FileLoader
 	/**
 	 * Loads an image file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function loadImage(id:String, ?onComplete:FileInfo->Void = null) {
 		loadFile(id, FileType.IMAGE, onComplete);
@@ -62,7 +62,7 @@ class FileLoader
 	/**
 	 * Loads a binary file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function loadBinary(id:String, ?onComplete:FileInfo->Void = null) {
 		loadFile(id, FileType.BINARY, onComplete);
@@ -70,16 +70,16 @@ class FileLoader
 	/**
 	 * Loads a text file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function loadSound(id:String, ?onComplete:FileInfo->Void = null) {
 		loadFile(id, FileType.SOUND, onComplete);
 	}
 	/**
 	 * Loads file
-	 * @param	id	 	The file relative or full path or URL.
-	 * @param 	type	The type of data to be loaded.
-	 * @param	timeout	Time (ms) before request timeout.
+	 * @param	id	 		The file relative or full path or URL.
+	 * @param 	type		The type of data to be loaded.
+	 * @param	onComplete	Callback when this file is loaded.
 	 */
 	public function loadFile(id:String, type:FileType, ?onComplete:FileInfo->Void = null) {
 		
@@ -103,7 +103,7 @@ class FileLoader
 	/**
 	 * Queues a text file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function queueText(id:String, ?onComplete:FileInfo->Void = null) {
 		queueFile(id, FileType.TEXT, onComplete);
@@ -111,7 +111,7 @@ class FileLoader
 	/**
 	 * Queues an image file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function queueImage(id:String, ?onComplete:FileInfo->Void = null) {
 		queueFile(id, FileType.IMAGE, onComplete);
@@ -119,7 +119,7 @@ class FileLoader
 	/**
 	 * Queues a binary file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function queueBinary(id:String, ?onComplete:FileInfo->Void = null) {
 		queueFile(id, FileType.BINARY, onComplete);
@@ -127,7 +127,7 @@ class FileLoader
 	/**
 	 * Queues a sound file.
 	 * @param	id				The file relative or full path or url.
-	 * @param	onComplete		Callback when loading finishes.
+	 * @param	onComplete		Callback when this file is loaded.
 	 */
 	public function queueSound(id:String, ?onComplete:FileInfo->Void = null) {
 		queueFile(id, FileType.SOUND, onComplete);
@@ -135,8 +135,9 @@ class FileLoader
 	
 	/**
 	 * Prepares file to be load but do not start loading it already.
-	 * @param	id		The file relative or full path or URL.
-	 * @param	type	The type of data to be loaded.
+	 * @param	id			The file relative or full path or URL.
+	 * @param	type		The type of data to be loaded.
+	 * @param	onComplete	Callback when this file is loaded.
 	 */
 	public function queueFile(id:String, type:FileType, ?onComplete:FileInfo->Void = null) {
 		
@@ -176,7 +177,6 @@ class FileLoader
 	 * Removes File from loading lists, only removes if it is not loading.
 	 * @param	id			The file id.
 	 * @param	dispose		Purges loaded data, causes bitmaps to be freed.
-	 *
 	 * @return	True if operation succeeds, fail if couldn't remove file.
 	 */
 	public function removeFile(id:String, dispose:Bool = false):Bool {
@@ -278,10 +278,10 @@ class FileLoader
 		var file = getLoadedFile(fileId);
 		
 		// calls specific callback if it exists when this file is loaded.
-		if (uniqueCallbacks.exists(fileId) {
+		if (uniqueCallbacks.exists(fileId)) {
 			var cbk = uniqueCallbacks[fileId];
 			uniqueCallbacks.remove(fileId);
-			cbk();
+			cbk(file);
 		}
 		
 		// dispatches general signal when file is loaded.

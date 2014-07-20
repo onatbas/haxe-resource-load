@@ -198,13 +198,10 @@ class TestLoadFiles extends AsyncTestCase
 		loader.queueFile("assets/noFile", FileType.TEXT);
 		loader.queueFile("assets/noFile2", FileType.TEXT);
 		loader.queueFile("assets/noFile3", FileType.TEXT);
-		
-		loader.onFileLoaded.add(function (_) { throw "non existing file dispatched load complete"; });
-		loader.onFilesLoaded.add(function (_) { throw "non existing file dispatched load complete"; });
-		loader.onFileLoadError.add(function (_) { fileCounter++; } );
-		loader.onFilesLoadError.addOnce(createAsync(onLoadError));
+	
+		loader.onFileLoaded.add(function (_) { fileCounter++; } );
+		loader.onFilesLoaded.addOnce(createAsync(onLoadError));
 		loader.loadQueuedFiles();
-		assertTrue(true);
 	}
 	
 	function onLoadError(e:Dynamic) {
@@ -216,6 +213,20 @@ class TestLoadFiles extends AsyncTestCase
 		for (file in files) {
 			assertFile(file, null, LoaderStatus.ERROR, FileType.TEXT);
 		}
+	}
+	
+	public function testLoadUniqueCallback() {
+		loader.loadImage("assets/i1.png", createAsync(function f(e:Dynamic) { 
+			assertFile(e, "assets/i1.png", LoaderStatus.LOADED, FileType.IMAGE);
+		}));
+		
+		loader.loadText("assets/t3.txt", createAsync(function f(e:Dynamic) { 
+			assertFile(e, "assets/t3.txt", LoaderStatus.LOADED, FileType.TEXT);
+		}));
+		
+		loader.loadBinary("assets/t1.txt", createAsync(function f(e:Dynamic) { 
+			assertFile(e, "assets/t1.txt", LoaderStatus.LOADED, FileType.BINARY);
+		}));
 	}
 	
 	/**

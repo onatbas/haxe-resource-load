@@ -197,6 +197,29 @@ class FolderTree {
 		
 		return result;
 	}
+	/**
+	 * If node exists, return if it is a file, otherwise return false.
+	 * @param	nodeId
+	 */
+	public function isNodeFile(nodeId:String):Bool {
+		var n:Node = getNode(nodeId, nodeTree, true);
+		if (n != null) {
+			return !n.isDir;
+		}
+		return false;
+	}
+	
+	/**
+	 * If node exists, return if it is a directory, otherwise return false.
+	 * @param	nodeId
+	 */
+	public function isNodeDir(nodeId:String):Bool {
+		var n:Node = getNode(nodeId, nodeTree, true);
+		if (n != null) {
+			return n.isDir;
+		}
+		return false;
+	}
 	//---------------------------------------------------------------------------------
 	//  AUX
 	//---------------------------------------------------------------------------------
@@ -356,11 +379,11 @@ class FolderTree {
 	/**
 	 * Searches node recursively in node tree
 	 * @param	path			the node path name
-	 * @param	levelNodes		the starting nodes
-	 * @param	recursive		search the tree recursively
+	 * @param	levelNodes		the starting nodes (use nodeTree to search the whole tree).
+	 * @param	recursive		search the tree recursively?
 	 * @return
 	 */
-	function getNode(path:String, nodes:Array<Node>, recursive:Bool):Node {
+	public function getNode(path:String, nodes:Array<Node>, recursive:Bool = true):Node {
 		for (n in nodes) {
 			
 			if (n.path == path) {

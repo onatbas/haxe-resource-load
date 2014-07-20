@@ -198,11 +198,22 @@ class TestFolderTree extends AsyncTestCase
 		manager.onFilesAdded.addOnce(function (n:Array<String>) { nodes = n; } );
 		manager.readTreeFromFile(tree);
 		
+		// asserts reading tree structure
 		assertTrue(nodes.length == 5);
 		assertTrue(nodes.indexOf("assets") != -1);
 		assertTrue(nodes.indexOf("assets/d1") != -1);
 		assertTrue(nodes.indexOf("assets/f1") != -1);
 		assertTrue(nodes.indexOf("assets/d1/f1") != -1);
 		assertTrue(nodes.indexOf("assets/d1/f2") != -1);
+		
+		// asserts isNodeFile and isNodeDir
+		assertTrue(manager.isNodeFile("assets/d1/f1"));
+		assertTrue(manager.isNodeFile("assets/d1/f2"));
+		assertTrue(manager.isNodeFile("assets/f1"));
+		assertTrue(manager.isNodeDir("assets/d1"));
+		assertTrue(manager.isNodeDir("assets"));
+		assertFalse(manager.isNodeDir("null"));
+		assertFalse(manager.isNodeFile("null"));
+		
 	}
 }
