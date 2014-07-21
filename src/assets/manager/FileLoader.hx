@@ -9,8 +9,11 @@ import assets.manager.loaders.TextLoader;
 import assets.manager.misc.FileInfo;
 import assets.manager.misc.FileType;
 import assets.manager.misc.LoaderStatus;
+import flash.display.BitmapData;
 import msignal.Signal.Signal1;
 import openfl.events.Event;
+import openfl.media.Sound;
+import openfl.utils.ByteArray;
 
 /**
  * File Load API class.
@@ -43,6 +46,9 @@ class FileLoader
 		manager.addEventListener(Event.COMPLETE, onManagerComplete);
 		manager.addEventListener(LoaderManager.EVT_FILE_LOAD_COMPLETE, onManagerFileComplete);
     }
+	//#################################################################################
+	//  LOAD FILES
+	//#################################################################################
 	/**
 	 * Loads a text file.
 	 * @param	id				The file relative or full path or url.
@@ -98,8 +104,9 @@ class FileLoader
 		
 		manager.loadList([id]);
 	}
-	
-	
+	//#################################################################################
+	//  QUEUE FILES
+	//#################################################################################
 	/**
 	 * Queues a text file.
 	 * @param	id				The file relative or full path or url.
@@ -172,7 +179,110 @@ class FileLoader
 		queuedFiles = new Array<String>(); // reset queued files before starting operation.
 		manager.loadList(qf);
 	}
+	//#################################################################################
+	//  GET LOADED FILES
+	//#################################################################################
+	/**
+	 * Type safe method to get loaded image.
+	 * @param	id	The asset id or path.
+	 * @return	The asset data or null if it can't be found.
+	 */
+	public function getLoadedImage(id:String):BitmapData {
+		var loader = getLoadedFile(id);
+		
+		if (loader != null && loader.type == FileType.IMAGE) {
+			return loader.data;
+		}
+		
+		return null;
+	}
+	/**
+	 * Type safe method to get loaded text.
+	 * @param	id	The asset id or path.
+	 * @return	The asset data or null if it can't be found.
+	 */
+	public function getLoadedText(id:String):String {
+		var loader = getLoadedFile(id);
+		
+		if (loader != null && loader.type == FileType.TEXT) {
+			return loader.data;
+		}
+		
+		return null;
+	}
+	/**
+	 * Type safe method to get loaded bytearray.
+	 * @param	id	The asset id or path.
+	 * @return	The asset data or null if it can't be found.
+	 */
+	public function getLoadedBytes(id:String):ByteArray {
+		var loader = getLoadedFile(id);
+		
+		if (loader != null && loader.type == FileType.BINARY) {
+			return loader.data;
+		}
+		
+		return null;
+	}
+	/**
+	 * Type safe method to get loaded sound.
+	 * @param	id	The asset id or path.
+	 * @return	The asset data or null if it can't be found.
+	 */
+	public function getLoadedSound(id:String):Sound {
+		var loader = getLoadedFile(id);
+		
+		if (loader != null && loader.type == FileType.SOUND) {
+			return loader.data;
+		}
+		
+		return null;
+	}
+	/**
+	 * Returns loaded asset with information about file id, data, loader status and data type.
+	 * Returns null if it has not been loaded or queued yet.
+	 * @param	id		The id of the asset (fullpath)
+	 * @return	The	file info or null if it can't be found.
+	 */
+	public function getLoadedFile(id:String):FileInfo {
+		var loader = manager.findLoader(id);
+		if (loader == null) return null;
+		
+		var asset:FileInfo = {
+			id:id,
+			type:loader.type,
+			status:loader.status,
+			data:loader.data
+		}
+		
+		return asset;
+	}
+	//#################################################################################
+	//  OTHER
+	//#################################################################################
+	/**
+	 * Checks if file id has been registered.
+	 * @param	file
+	 * @return
+	 */
+	public function exists(file:String):Bool {
+		return manager.findLoader(file) != null;
+	}
 	
+	/**
+	 * Lists registered files (queued or loaded).
+	 * @param	type	(Optional) only files of this type will be shown.
+	 * @return	List of asset ids.
+	 */
+	public function listFiles(type:FileType = null):Array<String> {
+		var result = new Array<String>();
+		for (loader in manager.loaders) {
+			if (loader.type == type || type == null) {
+				result.push(loader.id);
+			}
+		}
+		return result;
+	}
 	/**
 	 * Removes File from loading lists, only removes if it is not loading.
 	 * @param	id			The file id.
@@ -195,55 +305,9 @@ class FileLoader
 		}
 		return false;
 	}
-	
-	/**
-	 * Returns loaded assetwith information about file id, data, loader status and data type.
-	 * Returns null if it has not been loaded or queued yet.
-	 * @param	id		The id of the asset (fullpath)
-	 * @return	The	asset 
-	 */
-	public function getLoadedFile(id:String):FileInfo {
-		var loader = manager.findLoader(id);
-		if (loader == null) return null;
-		
-		var asset:FileInfo = {
-			id:id,
-			type:loader.type,
-			status:loader.status,
-			data:loader.data
-		}
-		
-		return asset;
-	}
-	
-	/**
-	 * Checks if file id has been registered.
-	 * @param	file
-	 * @return
-	 */
-	public function exists(file:String):Bool {
-		var loader = manager.findLoader(file);
-		return loader != null;
-	}
-	
-	/**
-	 * Lists registered files (queued or loaded).
-	 * @param	type	(Optional) only files of this type will be shown.
-	 * @return	List of asset ids.
-	 */
-	public function listFiles(type:FileType = null):Array<String> {
-		var result = new Array<String>();
-		for (loader in manager.loaders) {
-			if (loader.type == type || type == null) {
-				result.push(loader.id);
-			}
-		}
-		return result;
-	}
-	
-	//---------------------------------------------------------------------------------
+	//#################################################################################
 	//  PRIVATE
-	//---------------------------------------------------------------------------------
+	//#################################################################################
 	function addLoader(id, type) {
 		switch (type) {
 			case IMAGE: manager.addLoader(new ImageLoader(id));

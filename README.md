@@ -8,6 +8,12 @@ Assets Manager provides utils to manage external files, its main features are:
 
 Assets Manager is based of [AkaLoader](https://github.com/onatbas/AkaLoader) by Onatbas.
 
+### **Version 1.1 changes:**
+
+* Added type based API to load, queue and get files.
+* Added unique callbacks for each file loaded.
+* Removed error signal dispatchers, error status must be checked by listener.
+
 ###Main Components
 
 * **FileLoader** - Loads external files. **(cross-platform) - :requires openfl: -**
@@ -23,28 +29,34 @@ Uses openfl URLLoader to load external files. Full-path, relative path or URL ca
 Files are loaded assynchronously, and diferent notifications are sent:
 * **onFileLoaded :** everytime a file is loaded successfully.
 * **onFilesLoaded :** when files are loaded and there are no more to load.
-* **onFileError :** everytime a file fails to load.
-* **onFilesError :** when files fail to load and there are no more to load.
+* **NEW** - Unique callbacks may be assigned to each file when loading or queueing them.
 
+Example showing how to load a single file and assigning unique callback.
+```actionscript
+var loader = new FileLoader();
+loader.loadText("text.txt", onTextLoaded); 
 
-Here is an example on how to load a single and multiple files, and listening to the events available.
+function onTextLoaded(f:FileInfo) {
+    if (f.status == LoaderStatus.LOADED) {  // check for errors
+        trace(f.data);
+    }
+}
+```
+Example showing how to queue multiple files and listen for all files loaded signal.
 
 ```actionscript
 var loader = new FileLoader();
-loader.onFilesLoaded.add(onComplete);
-loader.queueFile("C:/dir/image.png", FileFormat.IMAGE); // full path
-loader.queueFile("C:/dir/image.jpg", FileFormat.IMAGE); // full path
-loader.queueFile("text.txt", FileFormat.TEXT);          // local path
-loader.loadFile("C:/dir/text2.txt", FileFormat.TEXT);   // load single file
-loader.loadQueuedFiles();                               // load queued files.
+loader.onFilesLoaded.add(onComplete);   // listen to all files loaded signal.
+loader.queueImage("image.png");         // local path
+loader.queueImage("C:/dir/image.jpg");  // full path
+loader.queueImage("www.img.com/i.jpg"); // url
+loader.loadQueuedFiles();               // load queued files.
 
 function onComplete(files:Array<FileInfo>) {
     for (file in files) {
-        if (file.type == FileType.IMAGE) {
-            addChild(new Bitmap(file.data));
-        } else 
-        if (file.type == FileType.TEXT) {
-            trace(file.data);
+        if (file.status == LoaderStatus.LOADED 
+            && file.type == FileType.IMAGE) {
+            addChild(new Bitmap(file.data));             
         }
     }
 }
