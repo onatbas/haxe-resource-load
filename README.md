@@ -43,8 +43,7 @@ function onTextLoaded(f:FileInfo) {
     }
 }
 ```
-Example showing how to queue multiple files and listen for all files loaded signal.
-
+Example showing how to queue multiple files and waiting for all files to be loaded.
 ```actionscript
 var loader = new FileLoader();
 loader.onFilesLoaded.add(onComplete);   // listen to all files loaded signal.
