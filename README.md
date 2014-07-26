@@ -30,7 +30,7 @@ Files are loaded asynchronously, and different notifications are sent:
 * **onFilesLoaded :** signal dispatched when files finish loading and there are no more to load.
 * **onComplete :** callback to a specific load or queue request. 
 
-Example loading a single file and using onComplete callback.
+Example loading a single file and using **onComplete** callback.
 ```actionscript
 var loader = new FileLoader();
 loader.loadText("text.txt", onTextLoaded); 
@@ -41,7 +41,7 @@ function onTextLoaded(f:FileInfo) {
     }
 }
 ```
-Example loading multiple files and listening to onFilesLoaded signal.
+Example loading multiple files and listening to **onFilesLoaded** signal.
 ```actionscript
 var loader = new FileLoader();
 loader.onFilesLoaded.add(onComplete);   // listen to all files loaded signal.
