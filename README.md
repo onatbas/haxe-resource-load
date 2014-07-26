@@ -26,9 +26,9 @@ To install it use `haxelib install assetsmanager`
 Uses openfl URLLoader to load external files. Full-path, relative path or URL can be used, full-path not available for flash target (and html5?).
 
 Files are loaded asynchronously, and different notifications are sent:
-* **onFileLoaded :** every time a file is loaded successfully.
-* **onFilesLoaded :** when files are loaded and there are no more to load.
-* **NEW** - Unique callbacks may be assigned to each file when loading or queueing them.
+* **onFileLoaded :** signal dispatched every time a file finishes loading (even with error).
+* **onFilesLoaded :** signal dispatched when files finish loading and there are no more to load.
+* **onComplete :** callback to a specific load or queue request. 
 
 Example showing how to load a single file and assigning unique callback.
 ```actionscript
