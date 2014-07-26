@@ -229,6 +229,53 @@ class TestLoadFiles extends AsyncTestCase
 		}));
 	}
 	
+	// Queue same file multiple times, assert that all callbacks are delivered.
+	public function testMultipleUniqueCallbacks(f:String = "assets/i1.png") {
+		var f1 = f;
+		var numCallback:Int = 0;
+		var numFiles:Int = 0;
+		
+		loader.queueImage(f1, createAsync(function f(e:Dynamic) { 
+			assertFile(e, f1, LoaderStatus.LOADED, FileType.IMAGE);
+			numCallback++;
+		}));
+		
+		loader.queueImage(f1, createAsync(function f(e:Dynamic) { 
+			assertFile(e, f1, LoaderStatus.LOADED, FileType.IMAGE);
+			numCallback++;
+		}));
+		
+		loader.queueImage(f1, createAsync(function f(e:Dynamic) { 
+			assertFile(e, f1, LoaderStatus.LOADED, FileType.IMAGE);
+			numCallback++;
+		}));
+		
+		var clbks:Map < String, Array < FileInfo->Void >> = cast Reflect.getProperty(loader, "uniqueCallbacks");
+		assertTrue(clbks.exists(f1)); // exists callbacks for file f1
+		assertTrue(clbks.get(f1).length == 3); // three callbacks for this file
+		assertTrue(loader.queuedFiles.length == 1); // one file queued
+		
+		loader.onFileLoaded.add(createAsync(function (e:Dynamic) { 
+			numFiles++;
+			assertTrue(numFiles == 1); // this event should only happen once.
+			assertTrue(numCallback == 3);
+			assertTrue(clbks.exists(f1) == false); // no more callbacks stored for this file
+			assertTrue(loader.queuedFiles.length == 0); // no queued files.
+		}));
+		
+		loader.onFilesLoaded.add(createAsync(function (e:Dynamic) {
+			assertTrue(numFiles == 1);
+			assertTrue(numCallback == 3);
+			
+			// repeat this test with another file, makes it more error proof.
+			if (f1 == "assets/i1.png") {
+				testMultipleUniqueCallbacks("assets/i2.png"); // ###### !! runs test again !! ######
+			}
+		}));
+		
+		loader.loadQueuedFiles();
+	}
+	
 	/**
 	 * Tests removing files.
 	 */

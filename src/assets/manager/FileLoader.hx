@@ -32,14 +32,13 @@ class FileLoader
 	public var onFileLoaded:Signal1<FileInfo>;
 	/** List of queued files, read only. */
 	public var queuedFiles(default, null):Array<String>;
-	
 	/** List of callbacks specific to a file */
-	var uniqueCallbacks:Map < String, FileInfo->Void >;
+	var uniqueCallbacks:Map<String, Array<FileInfo->Void>>;
 	
     public function new(maxConnectionLimit:Int = 3) {
 		onFilesLoaded = new Signal1<Array<FileInfo>>();
 		onFileLoaded = new Signal1<FileInfo>();
-		uniqueCallbacks = new Map < String, FileInfo->Void > ();
+		uniqueCallbacks = new Map <String, Array<FileInfo->Void>>();
 		queuedFiles = new Array<String>();
 		
 		manager = new LoaderManager(maxConnectionLimit);
@@ -89,15 +88,12 @@ class FileLoader
 	 */
 	public function loadFile(id:String, type:FileType, ?onComplete:FileInfo->Void = null) {
 		
+		// store unique callback
 		if (onComplete != null) {
-			if (!Reflect.isFunction(onComplete)) {
-				trace("Assets loader error: 'onComplete' is not a function");
-				return;
-			}
-			
-			uniqueCallbacks[id] = onComplete;
+			storeCallback(id, onComplete);
 		}
 		
+		// load file
 		if (!exists(id)) {
 			addLoader(id, type);
 		}
@@ -148,13 +144,9 @@ class FileLoader
 	 */
 	public function queueFile(id:String, type:FileType, ?onComplete:FileInfo->Void = null) {
 		
+		// store unique callback
 		if (onComplete != null) {
-			if (!Reflect.isFunction(onComplete)) {
-				trace("Assets loader error: 'onComplete' is not a function");
-				return;
-			}
-			
-			uniqueCallbacks[id] = onComplete;
+			storeCallback(id, onComplete);
 		}
 		
 		if (!exists(id)) {
@@ -317,6 +309,11 @@ class FileLoader
 		}
 	}
 	
+	/**
+	 * Returns file info for multiple files.
+	 * @param	list	The list of files
+	 * @return
+	 */
 	function createInfoList(list:Array<String>):Array<FileInfo> {
 		var info:Array<FileInfo> = new Array<FileInfo>();
 		
@@ -327,25 +324,41 @@ class FileLoader
 		return info;
 	}
 	
-	// dispatches loaded files events.
-	function onManagerComplete(e:Event):Void {
-		var loadedFiles = createInfoList(manager.loadedFiles);
-		
-		if (loadedFiles.length > 0) {
-			onFilesLoaded.dispatch(loadedFiles);
+	function storeCallback(id:String, cbk:FileInfo->Void) {
+		if (!Reflect.isFunction(cbk)) {
+			trace("Assets loader error: callback provided is not a function");
+			return;
+		}
+		var cbks:Array<FileInfo->Void>;
+		if (!uniqueCallbacks.exists(id)) {
+			cbks = new Array<FileInfo->Void>();
+			uniqueCallbacks[id] = cbks;
+		} else {
+			cbks = uniqueCallbacks[id];
+		}
+		if (!Lambda.has(cbks, cbk)) {
+			cbks.push(cbk);
 		}
 	}
 	
+	// dispatches loadedFiles event.
+	function onManagerComplete(e:Event):Void {
+		var loadedFiles = createInfoList(manager.loadedFiles);
+		onFilesLoaded.dispatch(loadedFiles);
+	}
+	
 	// dispatches event for loaded file.
-	private function onManagerFileComplete(e:Event):Void {
+	function onManagerFileComplete(e:Event):Void {
 		var fileId = manager.loadedFiles[manager.loadedFiles.length - 1];
 		var file = getLoadedFile(fileId);
 		
-		// calls specific callback if it exists when this file is loaded.
+		// calls all unique callbacks for this specific file.
 		if (uniqueCallbacks.exists(fileId)) {
-			var cbk = uniqueCallbacks[fileId];
+			var list = uniqueCallbacks[fileId];
 			uniqueCallbacks.remove(fileId);
-			cbk(file);
+			for (cbk in list) {
+				cbk(file);
+			}
 		}
 		
 		// dispatches general signal when file is loaded.

@@ -61,9 +61,9 @@ class FolderTree {
 		onFilesRemoved = new Signal1<Array<String>>();
 	}
 	
-	//---------------------------------------------------------------------------------
-	//  FOLDER TREE METHODS
-	//---------------------------------------------------------------------------------
+	//#################################################################################
+	//  PUBLIC METHODS
+	//#################################################################################
 	/**
 	 * Sets root folder path.
 	 * @param	path	Relative or absolute path to the root folder.
@@ -161,7 +161,6 @@ class FolderTree {
 			forAllNodes(n.children, f);
 		}
 	}
-	
 	/**
 	 * Read xml file and recursively generates tree structure from it.
 	 * Paths are not verified.
@@ -208,7 +207,6 @@ class FolderTree {
 		}
 		return false;
 	}
-	
 	/**
 	 * If node exists, return if it is a directory, otherwise return false.
 	 * @param	nodeId
@@ -220,9 +218,36 @@ class FolderTree {
 		}
 		return false;
 	}
-	//---------------------------------------------------------------------------------
-	//  AUX
-	//---------------------------------------------------------------------------------
+	/**
+	 * Searches node recursively in node tree
+	 * @param	path			the node path name
+	 * @param	levelNodes		the starting nodes (use nodeTree to search the whole tree).
+	 * @param	recursive		search the tree recursively?
+	 * @return
+	 */
+	public function getNode(path:String, nodes:Array<Node>, recursive:Bool = true):Node {
+		for (n in nodes) {
+			
+			if (n.path == path) {
+				return n;
+			}
+			
+			if (recursive) {
+				var result:Node;
+				for (child in n.children) {
+					result = getNode(path, n.children, true);
+					if (result != null) {
+						return result;
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	//#################################################################################
+	//  PRIVATE METHODS
+	//#################################################################################
 	/**
 	 * Read xml file and recursively generates tree structure from it.
 	 * Paths are not verified.
@@ -376,32 +401,4 @@ class FolderTree {
 		}
 		
 	}
-	/**
-	 * Searches node recursively in node tree
-	 * @param	path			the node path name
-	 * @param	levelNodes		the starting nodes (use nodeTree to search the whole tree).
-	 * @param	recursive		search the tree recursively?
-	 * @return
-	 */
-	public function getNode(path:String, nodes:Array<Node>, recursive:Bool = true):Node {
-		for (n in nodes) {
-			
-			if (n.path == path) {
-				return n;
-			}
-			
-			if (recursive) {
-				var result:Node;
-				for (child in n.children) {
-					result = getNode(path, n.children, true);
-					if (result != null) {
-						return result;
-					}
-				}
-			}
-		}
-		
-		return null;
-	}
-	
 }

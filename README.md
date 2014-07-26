@@ -9,11 +9,9 @@ Assets Manager provides utils to manage external files, its main features are:
 
 Assets Manager is based of [AkaLoader](https://github.com/onatbas/AkaLoader) by Onatbas.
 
-### **Version 1.1 changes:**
+### **Version 1.2 changes:**
 
-* Added type based API to load, queue and get files.
-* Added unique callbacks for each file loaded.
-* Removed error signal dispatchers, error status must be checked by listener.
+* Added support for multiple (onComplete) callbacks for the same requested file.
 
 ###Main Components
 
