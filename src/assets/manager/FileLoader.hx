@@ -297,6 +297,29 @@ class FileLoader
 		}
 		return false;
 	}
+	
+	/**
+	 * Destroys this loader and all its components.
+	 * @param 	dispose - If loaded bitmaps are purged.
+	 */
+	public function destroy(dispose:Bool = false) {
+		onFileLoaded.removeAll();
+		onFileLoaded = null;
+		onFilesLoaded.removeAll();
+		onFilesLoaded = null;
+		
+		manager.removeEventListener(Event.COMPLETE, onManagerComplete);
+		manager.removeEventListener(LoaderManager.EVT_FILE_LOAD_COMPLETE, onManagerFileComplete);
+		
+		var files = listFiles();
+		
+		for (file in files) { 
+			removeFile(file, dispose);
+		}
+		
+		queuedFiles = null;
+		uniqueCallbacks = null;
+	}
 	//#################################################################################
 	//  PRIVATE
 	//#################################################################################
@@ -352,6 +375,9 @@ class FileLoader
 		var fileId = manager.loadedFiles[manager.loadedFiles.length - 1];
 		var file = getLoadedFile(fileId);
 		
+		// dispatches general signal when file is loaded.
+		onFileLoaded.dispatch(file);
+		
 		// calls all unique callbacks for this specific file.
 		if (uniqueCallbacks.exists(fileId)) {
 			var list = uniqueCallbacks[fileId];
@@ -360,9 +386,6 @@ class FileLoader
 				cbk(file);
 			}
 		}
-		
-		// dispatches general signal when file is loaded.
-		onFileLoaded.dispatch(file);
 	}
 
 }

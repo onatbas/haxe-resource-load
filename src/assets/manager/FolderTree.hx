@@ -155,7 +155,8 @@ class FolderTree {
 	 * @param	nodes
 	 * @param	f
 	 */
-	public function forAllNodes(nodes : Array<Node>, f : Node-> Void ) {
+	public function forAllNodes(nodes : Array<Node>, f : Node-> Void ) {	
+		if (nodes == null) return;
 		for (n in nodes) {
 			f(n);
 			forAllNodes(n.children, f);
@@ -244,6 +245,24 @@ class FolderTree {
 		}
 		
 		return null;
+	}
+	
+	public function destroy() {
+		onFilesAdded.removeAll();
+		onFilesAdded = null;
+		onFilesChanged.removeAll();
+		onFilesChanged = null;
+		onFilesRemoved.removeAll();
+		onFilesRemoved = null;
+		
+		treeFile = null;
+		rootPath = null;
+		
+		forAllNodes(nodeTree, function f(node:Node) {
+			destroyNode(node);
+		} );
+		
+		nodeTree = null;
 	}
 	//#################################################################################
 	//  PRIVATE METHODS
@@ -391,6 +410,7 @@ class FolderTree {
 		while (i < nodes.length) {
 			node = nodes[i];
 			if (node.status == NodeStatus.REMOVED) {
+				destroyNode(node);
 				nodes.splice(i, 1);
 				i--;
 			} else {
@@ -400,5 +420,9 @@ class FolderTree {
 			i++;
 		}
 		
+	}
+	
+	function destroyNode(node:Node) {
+		node.children = null;
 	}
 }
