@@ -4,8 +4,7 @@ Assets Manager provides utils to manage external files, its main features are:
 * Load external files.
 * Save files in different formats.
 * Queue files to load / load them at once.
-* Use relative, absolute path or url for files.
-* Read folder structure and receive alerts for modified files or folders.
+* Folder Watcher - receive alerts when folder contents are modified.
 
 Assets Manager is based of [AkaLoader](https://github.com/onatbas/AkaLoader) by Onatbas.
 
@@ -78,9 +77,9 @@ FileSaver.saveAsText("Text.txt", "some string"); // saves locally.
 FileSaver.saveAsBytes("File", myByteArray); // saves locally.
 ```
 
-#FolderTree
+#Folder Watcher
 
-Folder tree reads a folder contents recursively and sends notifications when files or sub-dirs are added, removed or modified.
+Folder watcher reads a folder contents recursively and sends notifications when files or sub-dirs are added, removed or modified.
 
 
 Example:
