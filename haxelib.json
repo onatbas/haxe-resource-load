@@ -5,6 +5,7 @@
 	"tags": ["cross", "filesystem", "file", "loader", "utility"],
 	"description": "File loader/saver utils and more.",
 	"version": "1.2.0",
+	"classPath": "src",
 	"releasenote": "Improved callback support",
 	"contributors": ["prog4mr"],
 	"dependencies": { "mlib": "", "msignal": ""}
